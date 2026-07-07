@@ -4,6 +4,7 @@ date: 2026-07-07 09:00:00 -0700
 categories: [launch, developer-tools]
 tags: [opencli, cli, product-launch, alpha]
 excerpt: "OpenCLI is now in alpha: a faster way to write, test, and share command-line workflows with an interactive editor."
+image: /assets/images/opencli/opengraph-image.png
 ---
 
 #### Design, Build, and Document CLIs with Speed and Consistency
