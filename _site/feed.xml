@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-07-07T15:08:23-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Benjamin Dixon</title><subtitle>Personal blog and project updates</subtitle><author><name>Benjamin Dixon</name></author><entry><title type="html">OpenCLI Spec Is Now in Alpha</title><link href="http://localhost:4000/launch/developer-tools/2026/07/07/opencli-alpha-launch.html" rel="alternate" type="text/html" title="OpenCLI Spec Is Now in Alpha" /><published>2026-07-07T12:00:00-04:00</published><updated>2026-07-07T12:00:00-04:00</updated><id>http://localhost:4000/launch/developer-tools/2026/07/07/opencli-alpha-launch</id><content type="html" xml:base="http://localhost:4000/launch/developer-tools/2026/07/07/opencli-alpha-launch.html"><![CDATA[<h4 id="design-build-and-document-clis-with-speed-and-consistency">Design, Build, and Document CLIs with Speed and Consistency</h4>
+
+<p><img src="/assets/images/opencli/opengraph-image.png" alt="My Image" style="max-height: 400px; width: auto;" /></p>
+
+<p>Today, after over a year of on-and-off development, I’m excited to announce the alpha release of the OpenCLI Spec ecosystem.</p>
+
+<p><a href="htktps://opencli.dev/specification">OpenCLI Spec</a> is an open document specification and toolkit for designing, documenting, and building command-line interfaces with greater consistency and less friction.</p>
+
+<p>If you’re new to the project, visit the <a href="https://opencli.dev/">OpenCLI website</a> to learn more about the vision, specification, and current capabilities. Visit the <a href="https://github.com/bcdxn/opencli">OpenCLI GitHub repository</a> if you’d like to <a href="https://github.com/bcdxn/opencli/issues">propose new features</a> or <a href="https://github.com/bcdxn/opencli/blob/main/CONTRIBUTING.md">contribute</a>.</p>
+
+<h2 id="why-use-opencli-spec">Why Use OpenCLI Spec?</h2>
+
+<ul>
+  <li><strong>Document your CLI</strong> with a machine-readable specification, much like OpenAPI does for REST APIs.</li>
+  <li><strong>Design CLIs contract-first</strong>, defining the interface before implementation.</li>
+  <li><strong>Generate beautiful and consistent documentation</strong> from a single source of truth.</li>
+  <li><strong>Generate boilerplate code deterministically</strong> while remaining framework-agnostic.</li>
+  <li><strong>Help AI tools understand your CLI</strong> without spending precious tokens scanning the entire codebase.</li>
+</ul>
+
+<p>OpenCLI’s goal is to make command-line tools easier to design, implement, and document, by providing a reliable contract for both humans and AI.</p>
+
+<h2 id="example">Example</h2>
+
+<p>OpenCLI Spec documents are simply YAML (or JSON) files that define the surface area of available commands and their parameters. Let’s look at a sample document for a fictional <code class="language-plaintext highlighter-rouge">pleasantries</code> CLI that is OpenCLI Spec-compliant:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># pleasantries.ocs.yaml</span>
+<span class="na">opencliVersion</span><span class="pi">:</span> <span class="s">1.0.0-alpha.10</span>
+
+<span class="na">info</span><span class="pi">:</span>
+  <span class="na">title</span><span class="pi">:</span> <span class="s">Pleasantries</span>
+  <span class="na">summary</span><span class="pi">:</span> <span class="s">A fun CLI to greet or bid farewell</span>
+  <span class="na">version</span><span class="pi">:</span> <span class="s">1.0.0</span>
+  <span class="na">binary</span><span class="pi">:</span> <span class="s">pleasantries</span>
+
+<span class="na">commands</span><span class="pi">:</span>
+  <span class="s">pleasantries {command} &lt;arguments&gt; [flags]</span><span class="err">:</span>
+    <span class="na">group</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="s">pleasantries greet &lt;name&gt; [flags]</span><span class="err">:</span>
+    <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Say</span><span class="nv"> </span><span class="s">hello"</span>
+    <span class="na">args</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">name"</span>
+        <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">A</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">include</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">greeting"</span>
+        <span class="na">required</span><span class="pi">:</span> <span class="no">true</span>
+        <span class="na">type</span><span class="pi">:</span> <span class="s2">"</span><span class="s">string"</span>
+    <span class="na">flags</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">language"</span>
+        <span class="na">summary</span><span class="pi">:</span> <span class="s2">"</span><span class="s">The</span><span class="nv"> </span><span class="s">language</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">greeting"</span>
+        <span class="na">type</span><span class="pi">:</span> <span class="s2">"</span><span class="s">string"</span>
+        <span class="na">choices</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">english"</span>
+          <span class="pi">-</span> <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">spanish"</span>
+        <span class="na">default</span><span class="pi">:</span> <span class="s2">"</span><span class="s">english"</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">info</code> property defines metadata about the CLI. The <code class="language-plaintext highlighter-rouge">commands</code> property defines a map where each key is the command and the value defines command parameters. You can find the exact properties detailed in the <a href="https://opencli.dev/specification">specification schema</a> and/or look at more in-depth examples in the <a href="https://github.com/bcdxn/opencli/tree/main/examples">GitHub repository</a>.</p>
+
+<p>Although commands in a CLI are hierarchical, the document is intentionally designed to be flat to improve readability. The hierarchy can be (and is) maintained in the tooling ecosystem when <a href="https://pkg.go.dev/github.com/bcdxn/opencli@v1.0.0-alpha.9/codec">unmarshalling</a> the document.</p>
+
+<p>This document describes a CLI that has a single nested command <code class="language-plaintext highlighter-rouge">greet</code>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pleasantries greet Bob <span class="nt">--language</span> english
+<span class="c"># hello Bob!</span>
+<span class="nv">$ </span>pleasantries greet Alice <span class="nt">--language</span> spanish
+<span class="c"># Hola Alice!</span>
+</code></pre></div></div>
+
+<h2 id="opencli-spec-editor">OpenCLI Spec Editor</h2>
+
+<p>Check out the <a href="https://opencli.dev/editor">OpenCLI live editor</a> and see how documentation is automatically generated from the specification document.</p>
+
+<p><a href="https://opencli.dev/editor" class="btn btn--primary">Try It Out</a></p>
+
+<h2 id="open-source-and-feedback-friendly">Open Source and Feedback-Friendly</h2>
+
+<p>The project is open source, and you can review code, issues, and progress in the <a href="https://github.com/bcdxn/opencli">OpenCLI GitHub repository</a>.</p>
+
+<p>Alpha means the core ideas are live, and now community feedback is especially valuable. If you care about developer experience, CLI ergonomics, or workflow reliability, your input can shape what comes next.</p>]]></content><author><name>Benjamin Dixon</name></author><category term="launch" /><category term="developer-tools" /><category term="opencli" /><category term="cli" /><category term="product-launch" /><category term="alpha" /><summary type="html"><![CDATA[OpenCLI is now in alpha: a faster way to write, test, and share command-line workflows with an interactive editor.]]></summary></entry></feed>

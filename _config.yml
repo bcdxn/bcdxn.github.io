@@ -1,0 +1,80 @@
+title: "Benjamin Dixon"
+description: "Personal blog and project updates"
+url: "https://bcdxn.github.io"
+baseurl: ""
+repository: "bcdxn/bcdxn.github.io"
+
+theme: null
+remote_theme: "mmistakes/minimal-mistakes"
+minimal_mistakes_skin: "dirt"
+
+plugins:
+  - jekyll-include-cache
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+author:
+  name: "Benjamin Dixon"
+  avatar: "/assets/images/profile/benjamin-dixon.jpg"
+  bio: "Sharing my notes on software, experiments, and learnings"
+  links:
+    - label: "GitHub"
+      icon: "fab fa-github"
+      url: "https://github.com/bcdxn"
+    - label: "X"
+      icon: "fab fa-x-twitter"
+      url: "https://x.com/Swo0o0o0p"
+    - label: "Bluesky"
+      icon: "fas fa-cloud"
+      url: "https://bsky.app/profile/bcdxn.bsky.social"
+    - label: "LinkedIn"
+      icon: "fab fa-linkedin"
+      url: "https://www.linkedin.com/in/benjamin-dixon-44061214/"
+
+collections:
+  pages:
+    output: true
+    permalink: /:path/
+
+include:
+  - _pages
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: false
+      share: true
+      related: true
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: single
+      author_profile: true
+
+paginate: 5
+paginate_path: /page:num/
+
+atom_feed:
+  path: feed.xml
+
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-github"
+      url: "https://github.com/bcdxn"
+    - label: "X"
+      icon: "fab fa-x-twitter"
+      url: "https://x.com/Swo0o0o0p"
+    - label: "Bluesky"
+      icon: "fas fa-cloud"
+      url: "https://bsky.app/profile/bcdxn.bsky.social"
+    - label: "LinkedIn"
+      icon: "fab fa-linkedin"
+      url: "https://www.linkedin.com/in/benjamin-dixon-44061214/"
