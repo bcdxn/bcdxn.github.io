@@ -39,6 +39,7 @@ collections:
 
 include:
   - _pages
+  - robots.txt
 
 defaults:
   - scope:
