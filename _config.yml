@@ -10,8 +10,6 @@ minimal_mistakes_skin: "dirt"
 
 plugins:
   - jekyll-include-cache
-  - jekyll-feed
-  - jekyll-sitemap
   - jekyll-seo-tag
 
 author:
