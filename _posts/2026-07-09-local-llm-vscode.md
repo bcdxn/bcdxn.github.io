@@ -147,8 +147,10 @@ From there I select "New Model" --> "Custom Endpoint" and follow the prompts:
    ]
    ```
 
-And now I can prompt my own local LLM.
+And now I can prompt my own local LLM!
 
 ![Prompt Local LLM](/assets/images/localllm/inference.png)
+
+Honestly, that was easier that I thought it would be. The state of the tooling and ecosystem is impressively polished. From start to finish I was up and running in about a half hour. And that's including my detour to understand terms and download 60GB+ of models.
 
 Next up... running some benchmarks to see how performance compares to the hosted models and to other configurations of open source models. Then I want to run some benchmarks to see how we can improve token usage efficiency when using [OpenCLI Specification](https://opencli.dev) documents to build context about CLI tooling.
