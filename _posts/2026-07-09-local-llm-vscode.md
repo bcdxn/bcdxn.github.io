@@ -1,6 +1,7 @@
 ---
 title: "Experimenting with Local LLMs and VSCode"
 date: 2026-07-09 09:00:00 -0700
+last_modified_at: 2026-07-10 14:00:00 -0700
 categories: [blog]
 tags: [ai, experiments, llm, developer-tools]
 excerpt: "Experimenting with a local LLM and integrating with GitHub copilot in Visual Studio Code"
@@ -154,3 +155,15 @@ And now I can prompt my own local LLM!
 Honestly, that was easier that I thought it would be. The state of the tooling and ecosystem is impressively polished. From start to finish I was up and running in about a half hour. And that's including my detour to understand terms and download 60GB+ of models.
 
 Next up... running some benchmarks to see how performance compares to the hosted models and to other configurations of open source models. Then I want to run some benchmarks to see how we can improve token usage efficiency when using [OpenCLI Specification](https://opencli.dev) documents to build context about CLI tooling.
+
+#### Update
+
+After updating visual studio code on my Mac, my model integration over the LAN stopped working. I was greeted with an instantaneous error message:
+
+> Sorry, your request failed. Please try again.
+> Client Request Id: 79508090-e1ce-4694-a19e-293223b5772f
+> Reason: Please check your firewall rules and network connection then try again. Error Code: net::ERR_ADDRESS_UNREACHABLE.: Error: Please check your firewall rules and network connection then try again. Error Code: net::ERR_ADDRESS_UNREACHABLE. at bG.\_provideLanguageModelResponse (/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/copilot/dist/extension.js:1710:13930) at async bG.provideLanguageModelResponse (/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/copilot/dist/extension.js:1710:14933
+
+I wasted another 30 minutes trying to figure out what had changed (I even rolled back to an older version of vs code and got the same results). The issue was that MacOS had toggled the `System Settings` / `Privacy & Security` / `Local Network` setting for the new install of VS Code and was preventing the app from making request on the local network.
+
+TL;DR: For visual studio code, make sure the "Allow the applications below to find and communicate with devices on your local network." toggled is enabled.
