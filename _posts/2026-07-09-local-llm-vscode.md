@@ -158,12 +158,12 @@ Next up... running some benchmarks to see how performance compares to the hosted
 
 #### Update
 
-After updating visual studio code on my Mac, my model integration over the LAN stopped working. I was greeted with an instantaneous error message:
+After updating visual studio code on my Mac, my model integration over the LAN stopped working. I was greeted with an instantaneous error message in response to any chat attempt:
 
 > Sorry, your request failed. Please try again.
 > Client Request Id: 79508090-e1ce-4694-a19e-293223b5772f
 > Reason: Please check your firewall rules and network connection then try again. Error Code: net::ERR_ADDRESS_UNREACHABLE.: Error: Please check your firewall rules and network connection then try again. Error Code: net::ERR_ADDRESS_UNREACHABLE. at bG.\_provideLanguageModelResponse (/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/copilot/dist/extension.js:1710:13930) at async bG.provideLanguageModelResponse (/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/copilot/dist/extension.js:1710:14933
 
-I wasted another 30 minutes trying to figure out what had changed (I even rolled back to an older version of vs code and got the same results). The issue was that MacOS had toggled the `System Settings` / `Privacy & Security` / `Local Network` setting for the new install of VS Code and was preventing the app from making request on the local network.
+I wasted another 30 minutes trying to figure out what had changed (I even rolled back to an older version of vs code and got the same results). The issue was that MacOS had toggled the `System Settings` / `Privacy & Security` / `Local Network` setting for the new install of VS Code and was preventing the app from making requests on the local network.
 
 TL;DR: For visual studio code, make sure the "Allow the applications below to find and communicate with devices on your local network." toggled is enabled.
