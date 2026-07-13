@@ -4,9 +4,9 @@ url: "https://bcdxn.github.io"
 baseurl: "/"
 repository: "bcdxn/bcdxn.github.io"
 locale: "en-US"
-theme: minimal-mistakes-jekyll
 google_site_verification: "K6u5d626bFyMSSU9GqyhYNlX_W0N4LMqsIGuLWWBPUo"
 bing_site_verification: "9DCFCE8255E3F40C2A911BCFC08E5FAD"
+remote_theme: "mmistakes/minimal-mistakes"
 
 social:
   type: "Prson"
@@ -17,7 +17,7 @@ plugins:
   - jekyll-include-cache
   - jekyll-seo-tag
   - jekyll-sitemap
-
+  # - jekyll-remote-theme
 author:
   name: "Benjamin Dixon"
   avatar: "/assets/images/profile/benjamin-dixon.jpg"
