@@ -1,0 +1,19 @@
+---
+---
+
+@import "minimal-mistakes/skins/{{ site.activate_skin | default: 'default' }}"; // skin
+@import "minimal-mistakes"; // main theme variables & styles
+
+.page__content p, .page__content li {
+  font-size: .85em;
+  font-family: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
+
+code, div.highlighter-rouge, figure.highlight {
+  font-family: 'Fira Code', 'Fira Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-variant-ligatures: contextual;
+  text-rendering: optimizeLegibility;
+  line-height: 1.3em;
+  font-size: .8em;
+}

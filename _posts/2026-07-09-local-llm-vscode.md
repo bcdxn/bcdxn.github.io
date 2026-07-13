@@ -1,11 +1,13 @@
 ---
 title: "Experimenting with Local LLMs and VSCode"
-date: 2026-07-09 09:00:00 -0700
-last_modified_at: 2026-07-10 14:00:00 -0700
+date: 2026-07-09 17:00:00 -0400
+last_modified_at: 2026-07-10 14:00:00 -0400
 categories: [blog]
 tags: [ai, experiments, llm, developer-tools]
 excerpt: "Experimenting with a local LLM and integrating with GitHub copilot in Visual Studio Code"
 ---
+
+![path](https://images.unsplash.com/photo-1603555547526-364a03e01b2e?auto=format&fit=crop&w=2000&q=80)
 
 This is a "learn-as-I-go" post. I want to integrate VSCode with a local LLM. There are a few motivating reasons:
 

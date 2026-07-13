@@ -1,21 +1,27 @@
-title: "Benjamin Dixon"
+title: "bcdxn.github.io"
 description: "Personal blog and project updates"
 url: "https://bcdxn.github.io"
-baseurl: ""
+baseurl: "/"
 repository: "bcdxn/bcdxn.github.io"
+locale: "en-US"
+theme: minimal-mistakes-jekyll
+google_site_verification: "K6u5d626bFyMSSU9GqyhYNlX_W0N4LMqsIGuLWWBPUo"
+bing_site_verification: "9DCFCE8255E3F40C2A911BCFC08E5FAD"
 
-theme: null
-remote_theme: "mmistakes/minimal-mistakes"
-minimal_mistakes_skin: "dirt"
+social:
+  type: "Prson"
+  name: "Benjamin Dixon"
+
 
 plugins:
   - jekyll-include-cache
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 author:
   name: "Benjamin Dixon"
   avatar: "/assets/images/profile/benjamin-dixon.jpg"
-  bio: "Sharing my notes on software, experiments, and learnings"
+  bio: "otes on software, experiments, and learnings"
   links:
     - label: "GitHub"
       icon: "fab fa-github"
@@ -61,7 +67,7 @@ paginate: 5
 paginate_path: /page:num/
 
 atom_feed:
-  path: feed.xml
+  hide: true
 
 footer:
   links:

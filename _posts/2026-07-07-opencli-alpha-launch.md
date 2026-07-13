@@ -1,6 +1,6 @@
 ---
 title: "OpenCLI Spec Is Now in Alpha"
-date: 2026-07-07 09:00:00 -0700
+date: 2026-07-07 09:00:00 -0400
 categories: [blog]
 tags: [opencli, cli, developer-tools]
 excerpt: "OpenCLI is now in alpha: a faster way to write, test, and share command-line workflows with an interactive editor."
