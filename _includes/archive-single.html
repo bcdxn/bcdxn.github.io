@@ -1,0 +1,19 @@
+{% assign words = post.content | strip_html | number_of_words %}
+<div class="list__item">
+    <article class="archive__item" itemscope="" itemtype="https://schema.org/CreativeWork">
+        <h2 class="archive__item-title no_toc p-name" itemprop="headline">
+          <a class="u-url" href="{{ post.url | relative_url }}" rel="permalink">{{ post.title }}</a></h2>
+        <p class="page__meta">
+            <span class="page__meta-readtime">
+                <i class="far fa-clock" aria-hidden="true"></i> {% if words < 360 %}1 min{% else %}{{ words | divided_by: 180 }} min{% endif %} read time
+            </span>
+            {% if post.date %}
+            <i class="far fa-calendar-alt" aria-hidden="true"></i>
+            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
+            {% endif %}
+        </p>
+        <p class="archive__item-excerpt p-summary" itemprop="description">{{ post.excerpt }}
+        </p>
+    </article>
+</div>
+

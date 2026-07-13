@@ -7,6 +7,7 @@ locale: "en-US"
 google_site_verification: "K6u5d626bFyMSSU9GqyhYNlX_W0N4LMqsIGuLWWBPUo"
 bing_site_verification: "9DCFCE8255E3F40C2A911BCFC08E5FAD"
 remote_theme: "mmistakes/minimal-mistakes"
+words_per_minute: 180
 
 social:
   type: "Prson"
@@ -21,7 +22,7 @@ plugins:
 author:
   name: "Benjamin Dixon"
   avatar: "/assets/images/profile/benjamin-dixon.jpg"
-  bio: "otes on software, experiments, and learnings"
+  bio: "Notes on software, experiments, and learnings"
   links:
     - label: "GitHub"
       icon: "fab fa-github"
