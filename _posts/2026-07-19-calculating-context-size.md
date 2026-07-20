@@ -10,7 +10,7 @@ header:
 
 [![path](https://images.unsplash.com/photo-1783917053123-f68ec8e8be47?auto=format&fit=crop)](https://unsplash.com/photos/delicate-white-plants-in-a-golden-misty-meadow-hY05yBvFTS8)
 
-In my last post, I got Qwen3.6:27b running locally on my RTX 5090 via Ollama. The next question was: how big a context window can I actually give it before running out of VRAM?
+In my [previous local LLM-related post](/blog/2026/07/09/local-llm-vscode.html), I got Qwen3.6:27b running locally on my RTX 5090 via Ollama. The next question was: how big a context window can I actually give it before running out of VRAM?
 
 I saw that Qwen3.6 can support context windows as large as 262,144 tokens, so I figured I would start with that thinking that surely the largest amount of VRAM available in a consumer GPU could handle it. I was wrong. The model would frequently slow to a crawl and/or crash with this configuration.
 
