@@ -5,6 +5,8 @@ categories: [blog]
 tags: [cli, opencli]
 excerpt: "Generate boilerplate CLI code deterministically using OpenCLI specifications - contract-first and framework-agnostic"
 image: /assets/images/opencli/opengraph-image.png
+header:
+  og_image: /assets/images/opencli/opengraph-image.png
 ---
 
 ![OpenCLI Code Generation](https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?&auto=format&fit=crop)
