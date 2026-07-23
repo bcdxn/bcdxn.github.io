@@ -5,7 +5,7 @@ categories: [blog]
 tags: [ai, llm, ollama, qwen, local-llm]
 excerpt: "A practical walkthrough of calculating context window sizing for a local Qwen model on an RTX 5090"
 header:
-  og_image: https://images.unsplash.com/photo-1783917053123-f68ec8e8be47?auto=format&fit=crop
+  og_image: /assets/images/2026-07-19-ogimage.jpeg
 ---
 
 [![path](https://images.unsplash.com/photo-1783917053123-f68ec8e8be47?auto=format&fit=crop)](https://unsplash.com/photos/delicate-white-plants-in-a-golden-misty-meadow-hY05yBvFTS8)
