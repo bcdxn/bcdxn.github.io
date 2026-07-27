@@ -18,3 +18,5 @@ vendor/ruby/
 
 # macOS
 .DS_Store
+
+scratch.md
