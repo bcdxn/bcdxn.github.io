@@ -6,7 +6,7 @@ categories: [blog]
 tags: [ai, experiments, llm, developer-tools]
 excerpt: "Experimenting with a local LLM and integrating with GitHub copilot in Visual Studio Code over LAN"
 header:
-  og_image: https://images.unsplash.com/photo-1603555547526-364a03e01b2e?auto=format&fit=crop
+  og_image: /assets/images/2026-07-09-ogimage.jpeg
 ---
 
 ![path](https://images.unsplash.com/photo-1603555547526-364a03e01b2e?auto=format&fit=crop)
