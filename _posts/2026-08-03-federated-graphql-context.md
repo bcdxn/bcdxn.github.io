@@ -10,7 +10,7 @@ header:
 
 [![path](https://images.unsplash.com/photo-1516441311474-499e4f3b32db?auto=format&fit=crop)](https://unsplash.com/photos/aerial-view-of-trees-during-daytime-UxakjtPzIT0)
 
-Large organizations may end up with siloed divisions whether its simply due to operating model or from acquisitions. In these environments divisions often have their own, independent view of a customer, but experiences increasingly need a more holistic view. Let's walk through a pattern in Federated GraphQL schema design that can be leveraged to address this common problem.
+Large organizations may end up with siloed divisions whether its simply due to operating model or from acquisitions. In these environments divisions often have their own, independent view of a customer, but experiences increasingly need a more holistic view. The instinctive fix is to push identifiers into custom request headers or build a Backend for Frontend (BFF) layer per calling context — but both approaches collapse under domain complexity and become a maintenance burden at scale. Let's walk through a pattern in Federated GraphQL schema design that addresses the root cause instead.
 
 I'll use a fictional CPG company to illustrate the pattern. This fictional company has three divisions: Food & Beverage, Personal Care, and Home & Cleaning. Each division manages customers independently with its own ID system. A single person might be a loyalty member for the food brand, a rewards participant for the beauty line, and a bulk buyer for the household products — all under different identifiers.
 
@@ -117,6 +117,8 @@ type Customer @key(fields: "id") {
   identifiers: CustomerIdentifiers @inaccessible
 }
 
+# The customer identifiers resolver in this subgraph implements the
+# mapping logic required to fetch division-specific identifiers
 type CustomerIdentifiers @key(fields: "id") @inaccessible {
   id: ID!
   foodLoyaltyId: ID
@@ -143,7 +145,7 @@ type CustomerIdentifiers @key(fields: "id") @external {
   foodLoyaltyId: ID
 }
 
-type FoodLoyaltyProgram @key(field: "id") {
+type FoodLoyaltyProgram @key(fields: "id") {
   id: ID!
   # ...
 }
@@ -163,13 +165,27 @@ type Customer @key(fields: "id") {
 }
 
 type CustomerIdentifiers @key(fields: "id") @external {
+  id: ID!
   personalCareRewardsId: ID
 }
 
-type PersonalCareRewards @key(field: "id") {
+type PersonalCareRewards @key(fields: "id") {
   id: ID!
   # ...
 }
+```
+
+**Home & Cleaning Subgraph**
+
+```graphql
+type Customer @key(fields: "id") {
+  # identity fields...
+
+  wholesaleDiscounts: [WholesaleDiscount!]!
+    @requires(fields: "identifiers { homeBulkBuyerId }")
+}
+
+# ...
 ```
 
 A few things to notice:
@@ -213,6 +229,7 @@ query Me {
       balance
       coupons
     }
+    # ...
   }
 }
 ```
@@ -228,6 +245,7 @@ query CustomerById {
       balance
       coupons
     }
+    # ...
   }
 }
 ```
@@ -273,7 +291,7 @@ The `Customer` subgraph no longer knows about `Programs`.
 # Customer Subgraph — clean, no knowledge of Programs
 type Query {
   me: Customer
-  customerById(input: IdInput!): Customer
+  customerById(id: ID!): Customer
 }
 
 type Customer @key(fields: "id") @context(name: "customerCtx") {
@@ -303,7 +321,7 @@ type Programs @key(fields: "id") {
   id: ID!
   foodLoyalty(
     _foodLoyaltyId: ID
-      @fromContext(field: "$customerCtx { identifiers { foodLoyaltyId } }")
+      @fromContext(fields: "$customerCtx { identifiers { foodLoyaltyId } }")
   ): FoodLoyaltyProgram
 }
 
@@ -333,7 +351,7 @@ type Programs @key(fields: "id") {
   personalCareRewards(
     _personalCareRewardsId: ID
       @fromContext(
-        field: "$customerCtx { identifiers { personalCareRewardsId } }"
+        fields: "$customerCtx { identifiers { personalCareRewardsId } }"
       )
   ): PersonalCareRewards
 }
@@ -356,9 +374,6 @@ And our queries express the logical relationships we expect out the graph. Behin
 ```graphql
 query Me {
   me {
-    profile {
-      name
-    }
     programs {
       foodLoyalty {
         points
@@ -368,7 +383,10 @@ query Me {
         balance
         coupons
       }
-      # ...
+    }
+    # other logical groupings of data ...
+    profile {
+      name
     }
   }
 }
@@ -385,5 +403,7 @@ The `CustomerIdentifiers` pattern, combined with `@context`, gives you:
 - **Clean domain boundaries** — no prop drilling, no cross-domain coupling in subgraph schemas
 - **Auditability** — every identifier dependency is declared in the schema, visible during governance reviews
 - **Future-proofing** — change the underlying ID systems without touching consumer APIs
+
+Our fictional CPG company can now ship a single loyalty query that works identically whether a customer is checking their own rewards or a support agent is looking them up — no custom headers, no BFF-per-context, and no leaking of internal ID systems to consumers.
 
 Large organizations don't need to choose between unified experiences and domain autonomy. GraphQL Federation gives you both — if you design the schemas right.
