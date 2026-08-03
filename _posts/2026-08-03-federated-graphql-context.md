@@ -129,7 +129,7 @@ type CustomerIdentifiers @key(fields: "id") @inaccessible {
 
 **Food Loyalty Subgraph**
 
-Contributes the `foodLoyaltyProgram` property to the `Customer` entity requring the `foodLoyaltyId`.
+Contributes the `foodLoyaltyProgram` property to the `Customer` entity requiring the `foodLoyaltyId`.
 
 ```graphql
 type Customer @key(fields: "id") {
@@ -153,7 +153,7 @@ type FoodLoyaltyProgram @key(fields: "id") {
 
 **Personal Care Subgraph**
 
-Contributes the `personalCareRewards` property to the `Customer` entity requring the `personalCareRewardsId`.
+Contributes the `personalCareRewards` property to the `Customer` entity requiring the `personalCareRewardsId`.
 
 ```graphql
 type Customer @key(fields: "id") {
@@ -314,11 +314,13 @@ Each division subgraph declares the context once on `Customer` and pulls the ide
 type Customer @key(fields: "id") @context(name: "customerCtx") {
   id: ID!
   identifiers: CustomerIdentifiers! @external
+
   programs: Programs @shareable
 }
 
 type Programs @key(fields: "id") {
   id: ID!
+
   foodLoyalty(
     _foodLoyaltyId: ID
       @fromContext(fields: "$customerCtx { identifiers { foodLoyaltyId } }")
@@ -343,11 +345,13 @@ type CustomerIdentifiers @key(fields: "id") @external {
 type Customer @key(fields: "id") @context(name: "customerCtx") {
   id: ID!
   identifiers: CustomerIdentifiers! @external
+
   programs: Programs @shareable
 }
 
 type Programs @key(fields: "id") {
   id: ID!
+
   personalCareRewards(
     _personalCareRewardsId: ID
       @fromContext(
