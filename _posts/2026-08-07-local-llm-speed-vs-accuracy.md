@@ -4,8 +4,11 @@ date: 2026-08-07 07:30:00 -0400
 categories: [blog]
 tags: [ai, experiments, llm]
 excerpt: "The MoE variant is 3.5x faster than its dense sibling — but on my local SWE-bench run it submitted wrong or invalid answers over 52% of the time it 'completed' a task. Here's what I found."
+image:
+  path: /assets/images/headers/2026-08-07-ogimage.jpg
+  alt: header
 header:
-  og_image: /assets/images/2026-08-07-ogimage.jpeg
+  og_image: /assets/images/headers/2026-08-07-ogimage.jpg
 ---
 
 [![path](https://images.unsplash.com/photo-1480350376518-4575ee35bf49?q=80&w=2070&auto=format&fit=crop)](https://unsplash.com/photos/a-close-up-of-a-wall-with-lines-on-it-O-8Fmpx7HqQ)

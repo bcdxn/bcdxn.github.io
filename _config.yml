@@ -10,15 +10,18 @@ remote_theme: "mmistakes/minimal-mistakes"
 words_per_minute: 180
 
 social:
-  type: "Prson"
+  type: "Person"
   name: "Benjamin Dixon"
+
+twitter:
+  username: "Swo0o0o0p"
 
 
 plugins:
   - jekyll-include-cache
   - jekyll-seo-tag
   - jekyll-sitemap
-  # - jekyll-remote-theme
+
 author:
   name: "Benjamin Dixon"
   avatar: "/assets/images/profile/benjamin-dixon.jpg"

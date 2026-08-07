@@ -8,6 +8,11 @@ header:
   og_image: /assets/images/2026-08-03-ogimage.jpeg
 ---
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script type="module">
+  mermaid.initialize({ startOnLoad: true });
+</script>
+
 [![path](https://images.unsplash.com/photo-1516441311474-499e4f3b32db?auto=format&fit=crop)](https://unsplash.com/photos/aerial-view-of-trees-during-daytime-UxakjtPzIT0)
 
 Large organizations may end up with siloed divisions whether its simply due to operating model or from acquisitions. In these environments divisions often have their own, independent view of a customer, but experiences increasingly need a more holistic view. The instinctive fix is to push identifiers into custom request headers or build a Backend for Frontend (BFF) layer per calling context — but both approaches collapse under domain complexity and become a maintenance burden at scale. Let's walk through a pattern in Federated GraphQL schema design that addresses the root cause instead.
