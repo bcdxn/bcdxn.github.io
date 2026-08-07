@@ -1,22 +1,32 @@
 ---
-title: "Local LLMs Speed vs Accuracy"
-date: 2026-08-04 07:30:00 -0400
+title: "I Benchmarked Qwen's Fast MoE Model Locally. It Was Confidently Wrong Half the Time."
+date: 2026-08-10 07:30:00 -0400
 categories: [blog]
 tags: [ai, experiments, llm]
-excerpt: ""
+excerpt: "The MoE variant is 3.5x faster than its dense sibling — but on my local SWE-bench run it submitted wrong or invalid answers over 52% of the time it 'completed' a task. Here's what I found."
 header:
   og_image: /assets/images/2026-08-03-ogimage.jpeg
 ---
 
 [![path](https://images.unsplash.com/photo-1480350376518-4575ee35bf49?q=80&w=2070&auto=format&fit=crop)](https://unsplash.com/photos/a-close-up-of-a-wall-with-lines-on-it-O-8Fmpx7HqQ)
 
-In both hosted models, and local models your limiting factor boils down to the same precious resource - tokens. But how we reach that limit is very different. With hosted models, price per token and ultimately the total amount of money you want to spend on a particular task is the finite resource. With local models, tokens are essentially free (not counting the cost of electricity and other externalities) -- so money isn't the limiting factor. Instead, _time_ becomes precious. Tokens per second dictate how fast a model can generate output and therefore solve problems and on local commodity hardware that can slow to what feels like a crawl (compared to hosted alternatives).
+Qwen's MoE model `Qwen 3.6 35B A3B` generates tokens **3.5x faster** than its dense 27B sibling on my local hardware. Qwen's published benchmarks suggest you only give up 5–10% accuracy for that speedup. That's an incredible trade-off.
 
-As a result new architectures specifically designed for efficiency have been developed -- enter Qwen's Mixture of Experts (MoE) variants. In MoE architectures, only a subset of the full model parameters are active when generating tokens making them faster. In the case of `Qwen 3.6 35B A3B` it is _significantly_ faster than its dense 27 billion parameter sibling `Qwen3.6 27B`.
+I ran a local SWE-bench experiment to find out if I could replicate the numbers. The headline result: when the MoE model _did_ submit an answer, **it was wrong or completely invalid over 52% of the time**.
+
+Here's how I got there.
+
+---
+
+## Why Speed Matters for Local LLMs
+
+With hosted models, your limiting resource is money — price per token caps how much you can do. With local models, tokens are essentially free (ignoring cost of electricity). So the constraint shifts: _time_ becomes precious. Tokens per second dictate how fast a model can solve problems, and on commodity hardware that can feel like a crawl compared to hosted alternatives.
+
+This is what makes Mixture of Experts (MoE) architectures appealing. In an MoE model, only a subset of parameters are active for any given token, making generation significantly faster than their dense model counterparts. `Qwen 3.6 35B A3B` has 35 billion total parameters but only activates ~3 billion at a time — hence "A3B".
 
 ![qwen-tokens-pers-second-comparison](/assets/images/localllm/token-perf-comparison.svg)
 
-The chart above shows the results of running a prompt with reasoning disabled purely for the purpose of capturing token generation speed. accuracy (or even coherance) was not a factor. Running both models locally on an RTX 5090 using llama.cpp server:
+The chart above shows the results of running a prompt with reasoning disabled purely for the purpose of capturing token generation speed. Accuracy (or even coherence) was not a factor. Running both models locally on an RTX 5090 using llama.cpp server:
 
 ```sh
 llama-server -m ./models/qwen3.6-27b-q4_k_m.gguf \
@@ -49,9 +59,9 @@ curl http://192.168.1.173:8080/v1/chat/completions \
   }'
 ```
 
-We can see that the 35 billion parameter MoE variant is about 3.5x faster at generating output than the dense 27 billion parameter model. We get about 250 tokens pers second with `35B A3B` vs about 72 tokens per ssecond with `27B`.
+We can see that the 35 billion parameter MoE variant is about 3.5x faster at generating output than the dense 27 billion parameter model. We get about 250 tokens per second with `35B A3B` vs about 72 tokens per second with `27B`.
 
-So if our limiting factor is factor is time with running local LLMs, then we should always use this MoE variant!
+So if our limiting factor is time when running local LLMs, then we should always use this MoE variant!
 
 Not so fast.
 
@@ -63,7 +73,7 @@ Interestingly, on their [HuggingFace Model Card](https://huggingface.co/Qwen/Qwe
 
 ![HF Bench Results](/assets/images/localllm/qwen3.6-hf-card-bench-results.png)
 
-This is an extremely impressive result and I wanted to verify it running the benchmark locally. If I can get 3.5x the speed to similarly accurate results, then I'm all for it!
+This is an extremely impressive result and I wanted to verify it by running the benchmark locally. If I can get 3.5x the speed to similarly accurate results, then I'm all for it!
 
 ## Local Benchmarks
 
@@ -101,34 +111,71 @@ mini-extra swebench \
 
 Here are the results of my local benchmark:
 
-![SWE bench comparison](/assets/images/localllm/swe-bench-comparison.svg)
+![SWE bench comparison](/assets/images/localllm/swe-bench-chart-1.svg)
+
+> **<i class="fas fa-triangle-exclamation"></i> Note:**  
+> The other errors category comprises `Timeout`, `RepeatedFormatError`, `ContextWindowExceededError`
+>
+> Qwen 3.6 27B:
+>
+> - 17 Timeouts
+>
+> Qwen 3.6 35B-A3B
+>
+> - 4 Timeouts
+>
+> {: .notice--warning}
 
 ### Some Thoughts
 
-1. My numbers seem quite a bit different than the published benchmarks. Some reasons for that:
+My absolute numbers are lower than Qwen's published results, which isn't surprising. The agent harness matters — I used the default mini-swe-agent while Qwen almost certainly used a more optimised one. Q4_K_M quantization also has a cost. And my aggressive 5-minute time limit hurt the dense model more, since it tends to think longer before acting.
 
-- I'm guessing agent harness has some impact. I used the default mini-swe-agent. I assume Qwen used their own harness.
-- I'm sure quantization levels (I used Q4_K_M quantized model ways) impacts performance
-- As previously stated, I set aggressive time limits on task completion. Giving the model more time would probably yield better results particularly for the dense variant.
+That said, the **gap between the two models** is what I'm most interested in, and here the results roughly hold: the dense 27B model completed only 2 more tasks than the MoE variant, which is consistent with Qwen's claimed 5–10% difference.
 
-3. The dense model only completed 2 more tasks than the MoE variant which does align with the 5-10% difference quoted in Qwen's results
-4. The MoE model is happy to submit wrong answers
-
-> **<i class="fas fa-triangle-exclamation"></i>Warning:**  
-> I don't want to put a whole lot of stock in comparing the accuracy numbers between the 27B runs and 35B A3B runs. Because the 27B modele timed out more frequently, I may simply have not given enough time for the dense model to hallucinate as the MoE model did. For a fair comparison, both models should be given a chance to run to completion.
-> {: .notice--info}
+But task completion rate alone isn't the full story.
 
 ### Confidently Wrong
 
-The 5-10% gap in performance noted in the benchmark doesn't tell the full story. Instead, what jumps out at me is the fact that the MoE model is confidently wrong _a lot_. It is happy to submit wrong answers.
+What jumps out is not how many tasks the MoE model failed to complete — it's how often it completed a task _incorrectly_ and submitted anyway.
 
-- It submitted code that did not fix the issue 15 times out of 40 submissions. **It was 'wrong' 37.5% of the time.**
-- The patch was invalid 6 times, i.e. the bench evaluator couldn't even apply the patch because it was garbage. **It fully hallucinated 15% of the time**
-- Combining the wrong answers and invalid diffs **it was confidently wrong 52.25% **of the time that it 'completed' the task
+- **37.5% of submissions** contained code that did not fix the issue (15 out of 40)
+- **15% of submissions** were invalid patches — the evaluator couldn't even apply them; the model had hallucinated a diff from scratch
+- Combined: **the MoE model was confidently wrong 52.5% of the time it produced an answer**
+
+> **<i class="fas fa-triangle-exclamation"></i> Caveat:**  
+> Because the 27B model timed out more frequently under the 5-minute limit, I may not have given it enough rope to hallucinate at the same rate. For a fair apples-to-apples comparison, both models should be allowed to run to completion. Take the accuracy comparison with a grain of salt.
+> {: .notice--warning}
+
+**Update**
+
+Because of the caveat above, I wanted to see if I could create a more fair comparison for the MoE variant. I gave both models 15 minutes per task on all tasks that had previously timed out and ended up with a different picture.
+
+![SWE bench comparison 2](/assets/images/localllm/swe-bench-chart-2.svg)
+
+> **<i class="fas fa-triangle-exclamation"></i> Note:**  
+> The other errors category comprises `Timeout`, `RepeatedFormatError`, `ContextWindowExceededError`
+>
+> Qwen 3.6 27B:
+>
+> - 1 Timeouts
+>
+> Qwen 3.6 35B-A3B
+>
+> - 3 ContextWindowExceededError
+> - 1 RepeatedFormatError
+>
+> {: .notice--warning}
+
+With my hardware, and variants of the two models 27B was significantly more accurate. I found a 33% improvement in task completion bringing over all completion rate to an impresive 72%. Unfortunately I found that _both_ models were quite happy to submit wrong answers. Given more time, the dense model went from 6 wrong answers to submitting 13.
+
+Giving the dense model 3x the time to complete the task drove significant results. Giving the MoE task more time to complete the results did not improve its score at all.
 
 ## Takeaways
 
-This article isn't meant to beat up on Qwen 3.6 or to discourage its use. In fact I use the dense variant as my daily driver and only go over to Claude when I really have to. Instead, all of this is to say
+None of this is meant to discourage you from using Qwen 3.6 — I use the dense 27B variant as my daily driver and it's excellent. The point is more nuanced:
 
-1. Benchmark numbers on their own don't tell the full story (particularly when you're running quantized variants locally)
-2. Don't blindly trust LLMs to write your code
+**On model selection:** The MoE variant is the right tool for high-volume, low-stakes tasks where you'll review the output anyway — scaffolding, boilerplate, first drafts. For agentic tasks where the model submits code autonomously and you want it to be right, dense models may be more appropriate.
+
+**On benchmarks:** Published numbers are a starting point, not a verdict. Quantization, agent harness, time limits, and task distribution all affect results significantly. Particularly, for local LLMs, run your own experiments on your own hardware before making architectural decisions, but bring your patience.
+
+**On confidence:** This is the one that isn't talked about as much when labs post their scores. A model that submits a plausible-looking but broken patch has _failed invisibly_. I found that both dense model and the MoE variant did this frequently when given enough time. That's the real risk of leaning on these local models for autonomous work. Right now they are still just tools that require human oversight, albeit extremly powerful, almost magical tools.
