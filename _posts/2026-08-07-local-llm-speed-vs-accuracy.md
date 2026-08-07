@@ -130,7 +130,7 @@ Here are the results of my local benchmark:
 
 My absolute numbers are lower than Qwen's published results, which isn't surprising. The agent harness matters — I used the default mini-swe-agent while Qwen almost certainly used a more optimized one. Q4_K_M quantization also has a cost. And my aggressive 5-minute time limit hurt the dense model more, since it takes longer due to its token generation performance.
 
-That said, the **gap between the two models** is what I'm most interested in, and here the results roughly hold: the dense 27B model completed only 2 more tasks than the MoE variant, which is consistent with Qwen's claimed 5–10% difference.
+That said, the _gap between the two models_ is what I'm most interested in, and here the results roughly hold: the dense 27B model completed only 2 more tasks than the MoE variant, which is consistent with Qwen's claimed 5–10% difference.
 
 But task completion rate alone isn't the full story.
 
@@ -139,7 +139,7 @@ But task completion rate alone isn't the full story.
 What jumps out is not how many tasks the MoE model failed to complete — it's how often it completed a task _incorrectly_ and submitted anyway.
 
 - **37.5% of submissions** contained code that did not fix the issue (15 out of 40)
-- **15% of submissions** were invalid patches — the evaluator couldn't even apply them; the model had hallucinated a diff from scratch
+- **15% of submissions** were invalid patches — the evaluator couldn't even apply them; the model had hallucinated invalid content for the diff
 - Combined: **the MoE model was confidently wrong 52.5% of the time it produced an answer**
 
 > **<i class="fas fa-triangle-exclamation"></i> Caveat:**  
