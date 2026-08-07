@@ -4,8 +4,11 @@ date: 2026-08-03 07:30:00 -0400
 categories: [blog]
 tags: [graphql, federation, apollo, architecture]
 excerpt: "How to unify customer data across siloed business units using GraphQL Federation's @requires and @context directives."
+image:
+  path: /assets/images/banners/2026-08-03-ogimage.jpg
+  alt: header
 header:
-  og_image: /assets/images/2026-08-03-ogimage.jpeg
+  og_image: /assets/images/banners/2026-08-03-ogimage.jpg
 ---
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>

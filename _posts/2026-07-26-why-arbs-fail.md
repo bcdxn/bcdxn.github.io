@@ -4,8 +4,11 @@ date: 2026-07-26 07:30:00 -0400
 categories: [blog]
 tags: [architecture, governance]
 excerpt: "Architecture review boards start with good intentions. Six months later, engineers see them as all red tape and no value."
+image:
+  path: /assets/images/banners/2026-07-26-ogimage.jpg
+  alt: header
 header:
-  og_image: /assets/images/2026-07-26-ogimage.jpeg
+  og_image: /assets/images/banners/2026-07-26-ogimage.jpg
 ---
 
 [![path](https://images.unsplash.com/photo-1753787399084-0f8d699b1f0f?auto=format&fit=crop)](https://unsplash.com/photos/green-leaves-make-up-a-dense-dark-wall-TFV0HZXvL7Y)
