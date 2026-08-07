@@ -128,7 +128,7 @@ Here are the results of my local benchmark:
 
 ### Some Thoughts
 
-My absolute numbers are lower than Qwen's published results, which isn't surprising. The agent harness matters — I used the default mini-swe-agent while Qwen almost certainly used a more optimized one. Q4_K_M quantization also has a cost. And my aggressive 5-minute time limit hurt the dense model more, since it tends to think longer before acting.
+My absolute numbers are lower than Qwen's published results, which isn't surprising. The agent harness matters — I used the default mini-swe-agent while Qwen almost certainly used a more optimized one. Q4_K_M quantization also has a cost. And my aggressive 5-minute time limit hurt the dense model more, since it takes longer due to its token generation performance.
 
 That said, the **gap between the two models** is what I'm most interested in, and here the results roughly hold: the dense 27B model completed only 2 more tasks than the MoE variant, which is consistent with Qwen's claimed 5–10% difference.
 
