@@ -5,13 +5,13 @@ categories: [blog]
 tags: [ai, llm, ollama, qwen, local-llm]
 excerpt: "A practical walkthrough of calculating context window sizing for a local Qwen model on an RTX 5090"
 image:
-  path: /assets/images/banners/2026-07-19-ogimage.jpg
+  path: /assets/images/banners/2026-07-19.jpg
   alt: header
 header:
-  og_image: /assets/images/banners/2026-07-19-ogimage.jpg
+  og_image: /assets/images/banners/2026-07-19.jpg
 ---
 
-[![path](https://images.unsplash.com/photo-1783917053123-f68ec8e8be47?auto=format&fit=crop)](https://unsplash.com/photos/delicate-white-plants-in-a-golden-misty-meadow-hY05yBvFTS8)
+[![meadow](/assets/images/banners/2026-07-19.jpg)](https://unsplash.com/photos/delicate-white-plants-in-a-golden-misty-meadow-hY05yBvFTS8)
 
 In my [previous local LLM-related post](/blog/2026/07/09/local-llm-vscode.html), I got Qwen3.6:27b running locally on my RTX 5090 via Ollama. The next question was: how big a context window can I actually give it before running out of VRAM?
 

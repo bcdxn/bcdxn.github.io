@@ -5,13 +5,13 @@ categories: [blog]
 tags: [ai, experiments, llm]
 excerpt: "The MoE variant is 3.5x faster than its dense sibling — but on my local SWE-bench run it submitted wrong or invalid answers over 52% of the time it 'completed' a task. Here's what I found."
 image:
-  path: /assets/images/banners/2026-08-07-ogimage.jpg
+  path: /assets/images/banners/2026-08-07.jpg
   alt: header
 header:
-  og_image: /assets/images/banners/2026-08-07-ogimage.jpg
+  og_image: /assets/images/banners/2026-08-07.jpg
 ---
 
-[![path](https://images.unsplash.com/photo-1480350376518-4575ee35bf49?q=80&w=2070&auto=format&fit=crop)](https://unsplash.com/photos/a-close-up-of-a-wall-with-lines-on-it-O-8Fmpx7HqQ)
+[![wall](/assets/images/banners/2026-08-07.jpg)](https://unsplash.com/photos/a-close-up-of-a-wall-with-lines-on-it-O-8Fmpx7HqQ)
 
 Qwen's MoE model `Qwen 3.6 35B A3B` generates tokens **3.5x faster** than its dense 27B sibling on my local hardware. Qwen's published benchmarks suggest you only give up 5–10% accuracy for that speedup. That's an incredible trade-off.
 

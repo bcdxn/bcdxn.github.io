@@ -5,11 +5,14 @@ last_modified_at: 2026-07-10 14:00:00 -0400
 categories: [blog]
 tags: [ai, experiments, llm, developer-tools]
 excerpt: "Experimenting with a local LLM and integrating with GitHub copilot in Visual Studio Code over LAN"
+image:
+  path: /assets/images/banners/2026-07-09.jpg
+  alt: header
 header:
-  og_image: /assets/images/2026-07-09-ogimage.jpeg
+  og_image: /assets/images/banners/2026-07-09.jpg
 ---
 
-![path](https://images.unsplash.com/photo-1603555547526-364a03e01b2e?auto=format&fit=crop)
+[![path](/assets/images/banners/2026-07-09.jpg)](https://images.unsplash.com/photo-1603555547526-364a03e01b2e?auto=format&fit=crop)
 
 This is a "learn-as-I-go" post. I want to integrate VSCode with a local LLM. There are a few motivating reasons:
 

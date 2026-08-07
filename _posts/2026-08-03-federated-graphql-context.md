@@ -5,10 +5,10 @@ categories: [blog]
 tags: [graphql, federation, apollo, architecture]
 excerpt: "How to unify customer data across siloed business units using GraphQL Federation's @requires and @context directives."
 image:
-  path: /assets/images/banners/2026-08-03-ogimage.jpg
+  path: /assets/images/banners/2026-08-03.jpg
   alt: header
 header:
-  og_image: /assets/images/banners/2026-08-03-ogimage.jpg
+  og_image: /assets/images/banners/2026-08-03.jpg
 ---
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@ header:
   mermaid.initialize({ startOnLoad: true });
 </script>
 
-[![path](https://images.unsplash.com/photo-1516441311474-499e4f3b32db?auto=format&fit=crop)](https://unsplash.com/photos/aerial-view-of-trees-during-daytime-UxakjtPzIT0)
+[![trees](/assets/images/banners/2026-08-03.jpg)](https://unsplash.com/photos/aerial-view-of-trees-during-daytime-UxakjtPzIT0)
 
 Large organizations may end up with siloed divisions whether its simply due to operating model or from acquisitions. In these environments divisions often have their own, independent view of a customer, but experiences increasingly need a more holistic view. The instinctive fix is to push identifiers into custom request headers or build a Backend for Frontend (BFF) layer per calling context — but both approaches collapse under domain complexity and become a maintenance burden at scale. Let's walk through a pattern in Federated GraphQL schema design that addresses the root cause instead.
 

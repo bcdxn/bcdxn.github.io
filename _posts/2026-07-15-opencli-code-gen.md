@@ -4,12 +4,14 @@ date: 2026-07-15 07:30:00 -0400
 categories: [blog]
 tags: [cli, opencli]
 excerpt: "Generate boilerplate CLI code deterministically using OpenCLI specifications - contract-first and framework-agnostic"
-image: /assets/images/opencli/opengraph-image.png
+image:
+  path: /assets/images/banners/2026-07-15.jpg
+  alt: header
 header:
-  og_image: /assets/images/2026-07-15-ogimage.jpeg
+  og_image: /assets/images/banners/2026-07-15.jpg
 ---
 
-![OpenCLI Code Generation](https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?&auto=format&fit=crop)
+[![building](/assets/images/banners/2026-07-15.jpg)](https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?&auto=format&fit=crop)
 
 Building a CLI means writing the same boilerplate over and over: parse flags, validate arguments, wire up help text, handle errors, repeat for every command. It's tedious work even when frameworks help automate things that distracts you from writing the actual logic behind each action.
 
