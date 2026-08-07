@@ -24,7 +24,7 @@ With hosted models, your limiting resource is money — price per token caps how
 
 This is what makes Mixture of Experts (MoE) architectures appealing. In an MoE model, only a subset of parameters are active for any given token, making generation significantly faster than their dense model counterparts. `Qwen 3.6 35B A3B` has 35 billion total parameters but only activates ~3 billion at a time — hence "A3B".
 
-![qwen-tokens-pers-second-comparison](/assets/images/localllm/token-perf-comparison.svg)
+![qwen-tokens-per-second-comparison](/assets/images/localllm/token-perf-comparison.svg)
 
 The chart above shows the results of running a prompt with reasoning disabled purely for the purpose of capturing token generation speed. Accuracy (or even coherence) was not a factor. Running both models locally on an RTX 5090 using llama.cpp server:
 
@@ -47,7 +47,7 @@ curl http://192.168.1.173:8080/v1/chat/completions \
     "messages": [
       {
         "role": "user",
-        "content": "Write an extremely detailed, exhaustive tome about the history of computer science starting with invention of fire. It should take a human lifetime to read."
+        "content": "Write an extremely detailed, exhaustive tome about the history of computer science starting with the invention of fire. It should take a human lifetime to read."
       }
     ],
     "stream": true,
@@ -67,17 +67,17 @@ Not so fast.
 
 ## Time vs Accuracy
 
-As with all things there is a trade off. The MoE variant isn't quite as 'smart' as the denser model. Comparing the published benchmarks we see that the performance looks comparable but the lead is clearly with the 27B variant.
+As with all things, there is a trade-off. The MoE variant isn't quite as 'smart' as the denser model. Comparing the published benchmarks we see that the performance looks comparable but the lead is clearly with the 27B variant.
 
 Interestingly, on their [HuggingFace Model Card](https://huggingface.co/Qwen/Qwen3.6-27B#qwen36-highlights), their SWE-Bench Verified results show only about a 5-10% difference in task completion. Similar results are shown across other common benchmarks as well.
 
-![HF Bench Results](/assets/images/localllm/qwen3.6-hf-card-bench-results.png)
+[![HF Bench Results](/assets/images/localllm/qwen3.6-hf-card-bench-results.png)](https://huggingface.co/Qwen/Qwen3.6-27B#qwen36-highlights)
 
 This is an extremely impressive result and I wanted to verify it by running the benchmark locally. If I can get 3.5x the speed to similarly accurate results, then I'm all for it!
 
 ## Local Benchmarks
 
-I set off to run the benchmark locally. I cloned the [SWE-bench](https://github.com/swe-bench/SWE-bench) and [mini-swe-agent](https://github.com/SWE-agent/mini-swe-agent) repositories and got everything running... And I immediately realized that this was not as simple as I expected. Running these LLM benchmarks is not like running a benchmark against a typical algorithm. It's slow! (particularly on commodity hardware.) To give you an idea of just how slow, the average time to completion I was seeing for a single task was about 15-25 minutes. The SWE bench verified tasks (which is only a subset of the full SWE bench set) contains 500 tasks. So at 15 minutes per task, the full benchmark would take over 5 days of my GPU cranking 24 hours a day. So I settled on the 'Lite' subset, which is designed to be simpler, allowing for faster completion.
+I set off to run the benchmark locally. I cloned the [SWE-bench](https://github.com/swe-bench/SWE-bench) and [mini-swe-agent](https://github.com/SWE-agent/mini-swe-agent) repositories and got everything running... And I immediately realized that this was not as simple as I expected. Running these LLM benchmarks is not like running a benchmark against a typical algorithm. It's slow! (particularly on commodity hardware.) To give you an idea of just how slow, the average time to completion I was seeing for a single task was about 15-25 minutes. The SWE-bench verified tasks (which is only a subset of the full SWE-bench set) contains 500 tasks. So at 15 minutes per task, the full benchmark would take over 5 days of my GPU cranking 24 hours a day. So I settled on the 'Lite' subset, which is designed to be simpler, allowing for faster completion.
 
 Here, faster is relative. I didn't want to wait 24 hours for a result so I took a subset of the subset, the first 50 tasks in SWE Bench Lite. I also limited the allowed time per task to only 5 minutes. I figured this would level the playing field between the MoE model and the dense model and also save time on the data collection.
 
@@ -128,7 +128,7 @@ Here are the results of my local benchmark:
 
 ### Some Thoughts
 
-My absolute numbers are lower than Qwen's published results, which isn't surprising. The agent harness matters — I used the default mini-swe-agent while Qwen almost certainly used a more optimised one. Q4_K_M quantization also has a cost. And my aggressive 5-minute time limit hurt the dense model more, since it tends to think longer before acting.
+My absolute numbers are lower than Qwen's published results, which isn't surprising. The agent harness matters — I used the default mini-swe-agent while Qwen almost certainly used a more optimized one. Q4_K_M quantization also has a cost. And my aggressive 5-minute time limit hurt the dense model more, since it tends to think longer before acting.
 
 That said, the **gap between the two models** is what I'm most interested in, and here the results roughly hold: the dense 27B model completed only 2 more tasks than the MoE variant, which is consistent with Qwen's claimed 5–10% difference.
 
@@ -154,4 +154,4 @@ None of this is meant to discourage you from using Qwen 3.6 — I use the dense 
 
 **On benchmarks:** Published numbers are a starting point, not a verdict. Quantization, agent harness, time limits, and task distribution all affect results significantly. Particularly, for local LLMs, run your own experiments on your own hardware before making architectural decisions, but bring your patience.
 
-**On confidence:** This is the one that isn't talked about as much when labs post their scores. A model that submits a plausible-looking but broken patch has _failed invisibly_. I found that the MoE variant did this frequently. That's the real risk of leaning on these local models for autonomous work. Right now they are still just tools that require human oversight, albeit extremly powerful, almost magical tools.
+**On confidence:** This is the one that isn't talked about as much when labs post their scores. A model that submits a plausible-looking but broken patch has _failed invisibly_. I found that the MoE variant did this frequently. That's the real risk of leaning on these local models for autonomous work. Right now they are still just tools that require human oversight, albeit extremely powerful, almost magical tools.
