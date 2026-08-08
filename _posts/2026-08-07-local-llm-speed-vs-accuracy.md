@@ -170,7 +170,7 @@ Because of the caveat above, I wanted to see if I could create a more fair compa
 >
 > {: .notice--warning}
 
-With my hardware, and variants of the two models 27B was significantly more accurate. I found a 33% improvement in task completion bringing over all completion rate to an impresive 72%. Unfortunately I found that _both_ models were quite happy to submit wrong answers. Given more time, the dense model went from 6 wrong answers to submitting 13.
+With my hardware, and variants of the two models 27B was significantly more accurate. I found a 33% improvement in task completion bringing over all completion rate to an impresive 72% which isn't far off of the official results. Unfortunately I found that _both_ models were quite happy to submit wrong answers. Given more time, the dense model went from 6 wrong answers to submitting 13.
 
 Giving the dense model 3x the time to complete the task drove significant results. Giving the MoE task more time to complete the results did not improve its score at all.
 
