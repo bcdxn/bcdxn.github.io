@@ -41,7 +41,7 @@ llama-server -m ./models/qwen3.6-27b-q4_k_m.gguf \
   --log-file logs/$(date +%s).log
 ```
 
-and then running the prompt requests from another machine on my network:
+and then running a prompt that would be sure to generate a lot of tokens by sending a chat completions style request to the machine on my network that was hosting the [llama.cpp](https://github.com/ggml-org/llama.cpp) server:
 
 ```sh
 curl http://192.168.1.173:8080/v1/chat/completions \

@@ -4,7 +4,9 @@ date: 2026-07-07 09:00:00 -0400
 categories: [blog]
 tags: [opencli, cli, developer-tools]
 excerpt: "OpenCLI is now in alpha: a faster way to write, test, and share command-line workflows with an interactive editor."
-image: /assets/images/opencli/opengraph-image.png
+image:
+  path: /assets/images/opencli/opengraph-image.png
+  alt: header
 header:
   og_image: /assets/images/opencli/opengraph-image.png
 ---
