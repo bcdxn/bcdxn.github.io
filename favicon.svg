@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666665 8.4666666"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   sodipodi:docname="favicon.svg"
+   inkscape:export-filename="favicon.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="3.4765625"
+     inkscape:cx="56.665168"
+     inkscape:cy="-8.4853932"
+     inkscape:window-width="1371"
+     inkscape:window-height="664"
+     inkscape:window-x="0"
+     inkscape:window-y="491"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#f8d6b3;stroke:none;stroke-width:2.64583;stroke-linecap:round;stroke-linejoin:round"
+       id="rect1"
+       width="8.4666672"
+       height="8.4666662"
+       x="-2.5431316e-07"
+       y="2.2252401e-07"
+       rx="1.5875"
+       ry="1.5875" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';writing-mode:lr-tb;direction:ltr;fill:#29230c;fill-opacity:1;stroke:none;stroke-width:2.64583;stroke-linecap:round;stroke-linejoin:round"
+       x="0.098188832"
+       y="5.735867"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:Georgia;-inkscape-font-specification:'Georgia Bold Italic';fill:#29230c;fill-opacity:1;stroke-width:2.64583"
+         x="0.098188832"
+         y="5.735867">dxn</tspan></text>
+  </g>
+</svg>
