@@ -419,3 +419,9 @@ The `CustomerIdentifiers` pattern, combined with `@context`, gives you:
 Our fictional CPG company can now ship a single loyalty query that works identically whether a customer is checking their own rewards or a support agent is looking them up — no custom headers, no BFF-per-context, and no leaking of internal ID systems to consumers.
 
 Large organizations don't need to choose between unified experiences and domain autonomy. GraphQL Federation gives you both — if you design the schemas right.
+
+---
+
+> <i class="fas fa-person-chalkboard"></i>  
+> I was lucky enough to be asked to speak at Apollo Summit 2024 and this pattern was part of the discussion. [Check it out](https://www.apollographql.com/events/a-request-for-comment-federating-standards-and-schema-design-patterns-at-fidelity)
+> {: .notice--info}
