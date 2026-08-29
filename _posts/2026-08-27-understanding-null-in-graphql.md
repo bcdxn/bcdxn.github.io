@@ -14,7 +14,7 @@ header:
 
 [![trees](/assets/images/banners/2026-08-27.jpg)](https://unsplash.com/photos/aerial-view-of-trees-during-daytime-UxakjtPzIT0)
 
-I've debugged schemas where a resolver throws in one subgraph and an unrelated field across the graph silently comes back null. The root cause is often a non-nullable field on a shared type; data guarantees becomes a failure mode that impacts other tenants in the supergraph.
+I've debugged GraphQL schemas where a resolver throws in one subgraph and an unrelated field across the graph silently comes back null. The root cause is often a non-nullable field on a shared type; data guarantees becomesfailures that impact other tenants in the supergraph.
 
 Getting null right in GraphQL means answering two questions consistently: when should a field be nullable, and when there's no data, should you return `null` or a zero value like `[]`? The combination shapes how well your schema evolves, how much data survives a partial failure, and how straightforward your resolvers are to reason about.
 
