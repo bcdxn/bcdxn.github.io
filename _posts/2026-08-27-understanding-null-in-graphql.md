@@ -12,7 +12,7 @@ header:
   og_image: /assets/images/banners/2026-08-27.jpg
 ---
 
-[![trees](/assets/images/banners/2026-08-27.jpg)](https://unsplash.com/photos/aerial-view-of-trees-during-daytime-UxakjtPzIT0)
+[![trees](/assets/images/banners/2026-08-27.jpg)](https://unsplash.com/photos/water-droplets-on-glass-panel-krPdyjs1iTM)
 
 I've debugged GraphQL schemas where a resolver throws in one subgraph and an unrelated field across the graph silently comes back null. The root cause is often a non-nullable field on a shared type; data guarantees becomesfailures that impact other tenants in the supergraph.
 
