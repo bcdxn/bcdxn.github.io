@@ -13,7 +13,7 @@ header:
 
 [![sandbox](/assets/images/banners/2026-09-03.jpg)](https://unsplash.com/photos/green-leafed-trees-HrJSHoY9NG4)
 
-This is a learn-as-I-go post. I wanted to put some guardrails around my agents after seeing them get a little too curious.
+This is [another](/blog/2026/07/09/local-llm-vscode.html) learn-as-I-go post. I wanted to put some guardrails around my agents after seeing them get a little too curious.
 
 I was running OpenAI's Luna model in VS Code's agentic harness and noticed the "thinking" steps it was taking while exploring context for a task. It started wandering into other codebases on my machine that had nothing to do with the repo I was working in. That behavior, plus some [recent cybersecurity news](https://news.ycombinator.com/item?id=49454314) about LLMs and agents making unexpected network calls, made me want to sandbox things properly.
 
@@ -45,7 +45,7 @@ WORKDIR /workspace
 ENTRYPOINT ["pi"]
 ```
 
-Build it:
+And then I can build the image:
 
 ```sh
 docker build -t agent-sbx:latest .
@@ -62,7 +62,7 @@ docker run --rm -ti \
   agent-sbx:latest
 ```
 
-Inside the container we can run:
+Inside the container I can run:
 
 ```sh
 curl -I https://google.com
@@ -70,7 +70,7 @@ curl -I https://google.com
 # ...
 ```
 
-Yep, it can phone home. That's exactly what I want to control. Let's add full network isolation:
+Yep, it can phone home. That's exactly what I want to control. I added full network isolation:
 
 ```sh
 docker run --rm -ti \
@@ -87,13 +87,13 @@ curl -I https://google.com
 # curl: (6) Could not resolve host: google.com
 ```
 
-Good. Now let's run it for real with a few more hardening options:
+Good. Now I can run it for real with a few more hardening options:
 
 - `--network none`: no interfaces at all. No outbound HTTP, no package installs, no exfiltration.
-- `--read-only`: root filesystem is read-only. Can't drop binaries or tamper with node_modules.
+- `--read-only`: root filesystem is read-only. Can't drop binaries or with existing packages (e.g. globally installed node_modules).
 - `--tmpfs /tmp:exec`: RAM-backed scratch space that disappears when the container stops. `:exec` lets tools write temp scripts.
 - `--tmpfs /home/agentuser/.pi`: fresh in-memory state per run, no cross-run leakage.
-- `-v "$(pwd)/workspace:workspace:rw"`: the one intentional write path back to my machine.
+- `-v "$(pwd):workspace:rw"`: the one intentional write path back to my machine.
 
 ```sh
 docker run --rm -ti \
@@ -101,7 +101,7 @@ docker run --rm -ti \
   --read-only \
   --tmpfs /tmp:exec \
   --tmpfs /home/agentuser/.pi \
-  -v "$(pwd)/workspace:/workspace:rw" \
+  -v "$(pwd):/workspace:rw" \
   --security-opt="no-new-privileges:true" \
   --cap-drop=ALL \
   agent-sbx:latest
@@ -114,7 +114,7 @@ ls /Users/bdxn
 # ls: /Users/bdxn: No such file or directory
 ```
 
-This is great. We've locked down the filesystem and the network successfully. Maybe too successfully. The agent can't call my local LLM, or any externally hosted model for that matter. A perfectly isolated agent is not very useful if the task requires a model endpoint.
+This is great. I've locked down the filesystem and the network successfully. Maybe too successfully. The agent can't call my local LLM, or any externally hosted model for that matter. A perfectly isolated agent is not very useful when it can't even call the underlying model.
 
 ## Adding a controlled egress proxy
 
