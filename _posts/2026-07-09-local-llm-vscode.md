@@ -3,7 +3,7 @@ title: "Experimenting with Local LLMs and VSCode"
 date: 2026-07-09 17:00:00 -0400
 last_modified_at: 2026-07-10 14:00:00 -0400
 categories: [blog]
-tags: [ai, experiments, llm, developer-tools]
+tags: [ai, experiments, llm, developer-tools, localllm]
 excerpt: "Experimenting with a local LLM and integrating with GitHub copilot in Visual Studio Code over LAN"
 image:
   path: /assets/images/banners/2026-07-09.jpg
