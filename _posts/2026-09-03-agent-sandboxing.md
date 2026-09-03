@@ -15,13 +15,15 @@ header:
 
 This is a learn-as-I-go post. I wanted to put some guardrails around my agents after seeing them get a little too curious.
 
-I was running OpenAI's Luna model in VSCode's agentic harness and noticed the "thinking" steps it was doing while exploring context for a task. It started wandering into other codebases on my machine that had nothing to do with the repo I was working in. That behavior, plus some [recent cyber security news](https://news.ycombinator.com/item?id=49454314) about LLMs and agents making unexpected network calls, made me want to actually sandbox things properly.
+I was running OpenAI's Luna model in VS Code's agentic harness and noticed the "thinking" steps it was taking while exploring context for a task. It started wandering into other codebases on my machine that had nothing to do with the repo I was working in. That behavior, plus some [recent cybersecurity news](https://news.ycombinator.com/item?id=49454314) about LLMs and agents making unexpected network calls, made me want to sandbox things properly.
+
+An autonomous coding agent has two capabilities I care about: it can change code, and it can discover things. The second one is easy to overlook. If the agent can inspect the host filesystem or make arbitrary network requests, a prompt injection, compromised dependency, or plain old model mistake can turn exploration into an incident.
 
 My first thought was just run the harness in Docker. Simple enough.
 
 ## A basic Docker sandbox for a CLI agent
 
-I started with the Pi coding agent as a test case. Here's the Dockerfile I ended up with:
+I started with the [Pi coding agent](https://pi.dev) as a test case. The first version was deliberately boring: a small Node image with a few tools installed. Here's the Dockerfile I ended up with:
 
 ```dockerfile
 FROM node:22-slim
@@ -99,24 +101,26 @@ docker run --rm -ti \
   --read-only \
   --tmpfs /tmp:exec \
   --tmpfs /home/agentuser/.pi \
-  -v "$(pwd)/workspace:workspace:rw" \
+  -v "$(pwd)/workspace:/workspace:rw" \
   --security-opt="no-new-privileges:true" \
   --cap-drop=ALL \
   agent-sbx:latest
 ```
 
-Now I can confirm that the agent can only see the file system within the Docker container.
+Now I can confirm that the agent can only see the filesystem within the Docker container.
 
 ```sh
 ls /Users/bdxn
 # ls: /Users/bdxn: No such file or directory
 ```
 
-This is great. We've locked down the file system and the network successfully. Maybe too successfully... now it can't call my local LLM (or any externally hosted models for that matter). I need an allow-list.
+This is great. We've locked down the filesystem and the network successfully. Maybe too successfully. The agent can't call my local LLM, or any externally hosted model for that matter. A perfectly isolated agent is not very useful if the task requires a model endpoint.
 
 ## Adding a controlled egress proxy
 
-I wanted the agent to be able to reach my local model endpoint on my LAN and maybe perform a search via an API like [Brave](https://brave.com/search/api/) or [Tavily](https://www.tavily.com) if I decide to allow it. The simplest way is a containerized egress proxy with ACLs. I picked [Squid](https://www.squid-cache.org) because it has great documentation and it's battle tested.
+The next problem was utility. I wanted the agent to reach my local model endpoint on the LAN and possibly perform a search through an API like [Brave](https://brave.com/search/api/) or [Tavily](https://www.tavily.com), but only when I explicitly allowed it. The simplest way to express that policy was a containerized egress proxy with ACLs. I picked [Squid](https://www.squid-cache.org) because it has good documentation and it's battle tested.
+
+This is least privilege in a form I can actually inspect: the agent has no direct route to the network, and the proxy has a small list of permitted destinations. The policy is visible in source control instead of living in a vague instruction to "be careful."
 
 I opted for the prebuilt image as I didn't need any additional customization beyond the standard configuration file:
 
@@ -145,13 +149,13 @@ http_access allow allowed_wan
 http_access deny all
 ```
 
-> **<i class="fas fa-lightbulb"></i>** Note that my local LLM is exposed on my local area network at `192.168.1.173:8080` at the moment, hence the addition of the IP address and non standard port.
+> **<i class="fas fa-lightbulb"></i>** Note that my local LLM is exposed on my local area network at `192.168.1.173:8080` at the moment, hence the addition of the IP address and non-standard port.
 > {: .notice--info}
 
-> **<i class="fas fa-warning"></i>** Now only specified IPs and domains are allowed. Everthing else is denied.
+> **<i class="fas fa-warning"></i>** Now only specified IPs and domains are allowed. Everything else is denied.
 > {: .notice--info}
 
-Then I can use docker-compose to tie the container in which the agent will run with the squid container that will act as the egress proxy enforcing the ACLs:
+Then I can use Docker Compose to tie the agent container to the Squid container that enforces the ACLs:
 
 ```yaml
 version: "3.8"
@@ -215,19 +219,19 @@ curl -I https://nytimes.com
 # blocked
 ```
 
-I've confirmed the agent can only talk to what I explicitly allow, both on my local filesystem and network.
+I've confirmed that the agent can only talk to what I explicitly allow, both on my local filesystem and on the network.
 
-## Doing the same for VSCode Copilot
+## Doing the same for VS Code Copilot
 
-Ultimately I want to continue to use VSCode's GitHub Copilot integration; I really like using Copilot inside the editor as a _copilot_, not the main pilot. Sandboxing VSCode uses the same concept as the CLI-based harness approach shown above. Instead of starting with a Dockerfile and building my own image, Microsoft provides _Dev Container images_. In fact VSCode has supported this concept of Dev Containers long before agentic coding was a thing. When it was introduced it was promoted as a way to securely work on code you may not fully trust or to have ephemeral development environments. In my case, I can use it when I may not fully trust my own agents or I just want a bit of extra isolation.
+Ultimately I want to continue using VS Code's GitHub Copilot integration. Call me a luddite, but I like using Copilot inside the editor as a _copilot_, not the main pilot. Sandboxing VS Code uses the same concept as the CLI harness above. Instead of starting with a Dockerfile and building my own image, Microsoft provides _Dev Container images_. Dev Containers have supported isolated, reproducible development environments since before agentic coding was a thing. In my case, they are useful when I don't fully trust an agent or simply want another layer of isolation around a task.
 
-VS Code Dev Containers run your project inside an isolated Docker container that VS Code treats as a remote development environment. The editor launches a lightweight server inside the container that is isolated from the host machine using the protections granted by containerization. The VSCode UI then connects to the server to providing a familiar experience.
+VS Code Dev Containers run the project inside an isolated Docker container that VS Code treats as a remote development environment. The editor launches a lightweight server inside the container, and the VS Code UI connects to that server while remaining familiar. The important detail here is the boundary: the editor backend and the agent operate inside the container, with only the workspace mounted from the host.
 
-The first step is to Install the Dev Containers extension:
+The first step is to install the Dev Containers extension:
 
 [![extension page](/assets/images/2026-09-03-extension-sc.png)](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-then, within your workspace in VSCode create:
+Then, within my workspace in VS Code, I created a `.devcontainer` directory as shown:
 
 ```
 .devcontainer/
@@ -236,7 +240,7 @@ then, within your workspace in VSCode create:
   squid.conf
 ```
 
-The squid config for VSCode needs to be looser. Copilot seems to need access to `.github.com` broadly, not just a partitioned subdomain. This is the minimal allow-list that worked for me with a local LLM:
+The Squid config for VS Code needs to be looser. Copilot seems to need access to `.github.com` broadly, not just a partitioned subdomain. This is the minimal allow-list that worked for me with my local LLM:
 
 ```conf
 http_port 3128
@@ -257,7 +261,7 @@ http_access allow allowed_vscode
 http_access deny all
 ```
 
-The docker-compose.yaml file is mostly the same, except we swap out the custom image I created for Pi with Microsofts image and we need to give some additional in-memory file system locations that VSCode expects to be able to write to during normal operation:
+The `docker-compose.yaml` file is mostly the same, except that I swap the custom Pi image for Microsoft's image and add some in-memory filesystem locations that VS Code expects to write to during normal operation:
 
 ```yaml
 version: "3.8"
@@ -309,7 +313,7 @@ services:
     command: ["sleep", "infinity"]
 ```
 
-Lastly, the `devcontainer.json` file tells VSCode how to start in Dev Container mode.
+Lastly, the `devcontainer.json` file tells VS Code how to start in Dev Container mode.
 
 ```json
 {
@@ -330,7 +334,7 @@ Lastly, the `devcontainer.json` file tells VSCode how to start in Dev Container 
   "customizations": {
     "vscode": {
       "settings": {
-        "http.proxy": "http://proxy:3128",
+        "http.proxy": "http://egress-proxy:3128",
         "http.proxyStrictSSL": true
       },
       "extensions": ["github.copilot", "github.copilot-chat"]
@@ -351,14 +355,18 @@ CONTAINER ID   IMAGE                                         COMMAND            
 ba3b7a1aec14   ubuntu/squid:latest                           "entrypoint.sh -f /e…"   ...   3128/tcp   agent-sandbox_devcontainer-egress-proxy-1
 ```
 
-It works but it's far from perfect. Copilot still needs some "phone home" capabilities even when I'm using a local model, which means opening up GitHub domains. There are more advanced ways to filter that traffic but Squid ACLs are the easy first step.
+It works, but it's far from perfect. Copilot still needs some "phone home" capabilities even when I'm using a local model, which means opening up GitHub domains. There are more advanced ways to filter that traffic, but Squid ACLs are an easy first step. Perhaps a reason to start using a harness like Pi more seriously.
 
 ## Tradeoffs
 
 An agent restricted this much is less useful by definition. It can't just `npm install` or `go get` whatever it wants; I have to do it manually when needed. Package managers are a risky attack vector anyway, as recent [supply chain attacks](https://aws.amazon.com/blogs/security/amazon-identifies-north-korean-hacker-group-behind-open-source-supply-chain-attacks/) have shown.
 
-For hobby projects this feels right. I get isolation for my local file system and I can limit blanket network access, with explicit allow-lists for the things I actually want. For higher risk environments you'd want more: vette tools, sophisticated AI gateways with full access control authorizing agents' actions.
+For hobby projects this feels right. I get isolation for my local filesystem and can limit blanket network access, with explicit allow-lists for the things I actually want. For higher-risk environments, you'd want more: vetted tools, stronger identity and authorization, and an AI gateway with full access control for agent actions.
 
-Balancing restrictive governance and utility is messy in practice. This setup gives me enough peace of mind that my agent isn't wandering around my machine or making surprise network calls, while still being able to use my local LLM.
+There is also an important limitation: a proxy is an application-layer control, not a magic firewall. Tools that ignore proxy environment variables, use raw sockets, or resolve and connect in unexpected ways need separate controls. The container network boundary is doing the heavier work here; Squid is the explicit allow-list for traffic that chooses to use the proxy.
+
+Balancing restrictive governance and utility is messy in practice. This setup gives me enough peace of mind that my agent isn't wandering around my machine or making surprise network calls.
+
+This is the kind of platform engineering problem I find interesting at larger companies too. Whether the system is protecting customer data or controlling software and tooling across a broader operational landscape, the underlying challenge is similar: turn a useful capability into a constrained, observable workflow without making engineers fight the system. The useful engineering work is in finding that boundary and then making it easy to operate.
 
 Next step for me is tightening the GitHub allow-list further and experimenting with per-task egress policies instead of a static list.
