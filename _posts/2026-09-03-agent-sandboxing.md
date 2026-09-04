@@ -70,7 +70,7 @@ curl -I https://google.com
 # ...
 ```
 
-Yep, it can phone home. That's exactly what I want to control. I added full network isolation:
+Yep, it can phone home. That's exactly what I want to control. So, I can full network isolation via the `--network` flag:
 
 ```sh
 docker run --rm -ti \
