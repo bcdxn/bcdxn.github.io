@@ -1,6 +1,6 @@
-title: "bcdxn.github.io"
+title: "bdxn.dev"
 description: "Personal blog and project updates"
-url: "https://bcdxn.github.io"
+url: "https://bdxn.dev"
 baseurl: "/"
 repository: "bcdxn/bcdxn.github.io"
 locale: "en-US"
@@ -15,7 +15,6 @@ social:
 
 twitter:
   username: "Swo0o0o0p"
-
 
 plugins:
   - jekyll-include-cache
