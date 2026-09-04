@@ -15,7 +15,7 @@ header:
 
 This is [another](/blog/2026/07/09/local-llm-vscode.html) learn-as-I-go post. I wanted to put some guardrails around my agents after seeing them get a little too curious.
 
-I was running [OpenAI's Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna) model in VS Code's agentic harness and noticed the "thinking" steps it was taking while exploring context for a task. It started wandering into other codebases on my machine that had nothing to do with the repo I was working in. That behavior, plus some [recent cybersecurity news](https://news.ycombinator.com/item?id=49454314) about LLMs and agents making unexpected network calls, made me want to sandbox things properly.
+I was running [OpenAI's Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna) model in VS Code's agentic harness and noticed the "thinking" steps it was taking while exploring context for a task. It started wandering into other codebases on my machine that had nothing to do with the repo I was working in. That behavior, plus some [recent cybersecurity news](https://news.ycombinator.com/item?id=49454314) about LLMs and agents exhibiting [unexpected behavior](https://news.ycombinator.com/item?id=49563355), made me want to sandbox things properly.
 
 An autonomous coding agent has two capabilities I care about: it can change code, and it can discover things. The second one is easy to overlook. If the agent can inspect the host filesystem or make arbitrary network requests, a prompt injection, compromised dependency, or plain old model mistake can turn exploration into an incident.
 
