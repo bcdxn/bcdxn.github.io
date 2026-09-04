@@ -367,6 +367,6 @@ There is also an important limitation: a proxy is an application-layer control, 
 
 Balancing restrictive governance and utility is messy in practice. This setup gives me enough peace of mind that my agent isn't wandering around my machine or making surprise network calls.
 
-This is the kind of platform engineering problem I find interesting at larger companies too. Whether the system is protecting customer data or controlling software and tooling across a broader operational landscape, the underlying challenge is similar: turn a useful capability into a constrained, observable workflow without making engineers fight the system. The useful engineering work is in finding that boundary and then making it easy to operate.
+This is the kind of platform engineering problem I find interesting, particularly at scale. Whether the system is protecting customer data or controlling software and tooling across a broader operational landscape, the underlying challenge is similar: turn a useful capability into a constrained, observable workflow without making engineers fight the system. The useful engineering work is in finding that boundary and then making it easy to operate.
 
 Next step for me is tightening the GitHub allow-list further and experimenting with per-task egress policies instead of a static list.
