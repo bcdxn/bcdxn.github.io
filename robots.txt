@@ -5,4 +5,4 @@ sitemap: false
 User-agent: *
 Allow: /
 
-Sitemap: https://bcdxn.github.io/sitemap.xml
+Sitemap: https://bdxn.dev/sitemap.xml
