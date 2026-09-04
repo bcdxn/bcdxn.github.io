@@ -8,7 +8,7 @@ image:
   path: /assets/images/banners/2026-09-03.jpg
   alt: header
 header:
-  og_image: /assets/images/banners/2026-09-03.jpg?v=3
+  og_image: /assets/images/banners/2026-09-03.jpg
 ---
 
 [![sandbox](/assets/images/banners/2026-09-03.jpg)](https://unsplash.com/photos/green-leafed-trees-HrJSHoY9NG4)
