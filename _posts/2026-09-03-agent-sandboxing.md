@@ -247,6 +247,11 @@ http_port 3128
 
 acl allowed_lan dst 192.168.1.173
 acl allowed_vscode dstdomain .github.com
+# Add the below domains if you are using models hosted by Microsoft
+acl allowed_vscode dstdomain .githubusercontent.com
+acl allowed_vscode dstdomain .githubcopilot.com
+acl allowed_vscode dstdomain .githubassets.com
+acl allowed_vscode dstdomain .default.exp-tas.com
 
 acl Safe_ports port 80
 acl Safe_ports port 8080
