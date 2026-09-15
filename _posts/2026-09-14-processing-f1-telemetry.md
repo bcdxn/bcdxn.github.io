@@ -211,4 +211,6 @@ The final number of events was smaller than the title I first had in mind when I
 
 The broader lesson is architectural. Separate concerns of transport, fanout, storage, replay, state reduction, and presentation. Then make the API boundary between them clear and simple; in my case that turned out to be a channel owned by a single go routine.
 
+[Check out the code](https://github.com/bcdxn/f1)
+
 Box! Box!
