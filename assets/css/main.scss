@@ -17,3 +17,11 @@ code, div.highlighter-rouge, figure.highlight {
   line-height: 1.3em;
   font-size: .8em;
 }
+
+.img-max-height {
+  max-height: 450px !important;
+  width: auto !important;
+  object-fit: contain;
+  margin: auto;
+  display: block;
+}
