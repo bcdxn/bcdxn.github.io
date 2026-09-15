@@ -53,7 +53,7 @@ The broadcaster is the most interesting part because it sits directly on the bou
 
 The recordings contain raw SignalR rows, not one row per logical F1 stream update. A single payload can contain multiple data stream events. e.g., `WeatherData`, `Position.z`, and `TimingAppData` can all be packaged together in a single SignalR payload.
 
-Running it against the five captured sessions produced this:
+Counting invdividual data stream events over the race weekend yielded:
 
 | Session           | Stream events |
 | ----------------- | ------------: |
