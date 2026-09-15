@@ -21,7 +21,8 @@ That number is just large enough to make the implementation interesting, but sma
 
 Here is the resulting TUI built using [Charmbracelet's Bubble Tea framework](https://github.com/charmbracelet/bubbletea) that consumes the telemetry data:
 
-![tui](/assets/images/2026-09-14-race-telemetry.mp4)
+<video src="/assets/videos/2026-09-14-race-telemetry.mp4" autoplay loop muted width="100%">
+</video>
 
 ## The Architecture
 
