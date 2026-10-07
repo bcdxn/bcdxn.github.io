@@ -119,8 +119,8 @@ func (b *Broadcaster) run() {
 
 This is a useful pattern when there is one natural owner for a small piece of mutable state. The map is not shared between goroutines, so we don't need to worry about race conditions on update. The sequence number is assigned in the same place that decides which subscribers see the event, so all subscribers observe the same ordering.
 
-> **<i class="fas fa-lightbulb"></i>** The broadcaster is not trying to be a general-purpose message bus. It is a short, in-process handoff between one ordered source and a few consumers.
-> {: .notice--info}
+**<i class="fas fa-lightbulb"></i>** The broadcaster is not trying to be a general-purpose message bus. It is a short, in-process handoff between one ordered source and a few consumers.
+{: .notice--info}
 
 ## Copying Is Part of the Contract
 

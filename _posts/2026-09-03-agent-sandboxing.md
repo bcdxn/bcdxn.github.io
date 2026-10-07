@@ -149,11 +149,11 @@ http_access allow allowed_wan
 http_access deny all
 ```
 
-> **<i class="fas fa-lightbulb"></i>** Note that my local LLM is exposed on my local area network at `192.168.1.173:8080` at the moment, hence the addition of the IP address and non-standard port.
-> {: .notice--info}
+**<i class="fas fa-lightbulb"></i>** Note that my local LLM is exposed on my local area network at `192.168.1.173:8080` at the moment, hence the addition of the IP address and non-standard port.
+{: .notice--info}
 
-> **<i class="fas fa-warning"></i>** Now only specified IPs and domains are allowed. Everything else is denied.
-> {: .notice--info}
+**<i class="fas fa-warning"></i>** Now only specified IPs and domains are allowed. Everything else is denied.
+{: .notice--info}
 
 Then I can use Docker Compose to tie the agent container to the Squid container that enforces the ACLs:
 

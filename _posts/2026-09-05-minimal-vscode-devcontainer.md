@@ -134,7 +134,7 @@ services:
     command: ["sleep", "infinity"]
 ```
 
-> **<i class="fas fa-lightbulb"></i>** Note the extra `tmpfs` mounts I've added for Go's build cache and module directories.
-> {: .notice--info}
+**<i class="fas fa-lightbulb"></i>** Note the extra `tmpfs` mounts I've added for Go's build cache and module directories.
+{: .notice--info}
 
 Good luck containing your agents!

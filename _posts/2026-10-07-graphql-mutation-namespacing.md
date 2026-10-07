@@ -52,9 +52,9 @@ flowchart LR
   classDef user fill:none,stroke:#333,stroke-width:3px
 
   mutation([mutation])
-  customer(CustomerMutation)
-  profile(ProfileMutation)
-  programs(ProgramsMutation)
+  customer(Customer)
+  profile(Profile)
+  programs(LoyaltyPrograms)
 
   mutation --> customer
   customer --> profile
@@ -78,7 +78,7 @@ So what does this look like in practice?
 
 ## Namespacing Mutations in a Stand-Alone Graph
 
-When federation is not a concern, i.e., when we are working on a stand-alone graph, namespacing is straightforward. We simply create types (`CustomerMutation`, `ProfileMutation`, and `ProgramsMutation` in the example below) to act as namespaces and add our mutations as fields to these types.
+When federation is not a concern, i.e., when we are working on a stand-alone graph, namespacing is straightforward. We simply create types (`CustomerMutation`, `ProfileMutation`, and `LoyaltyProgramsMutation` in the example below) to act as namespaces and add our mutations as fields to these types.
 
 ### For Example
 
@@ -89,7 +89,7 @@ type Mutation {
 
 type CustomerMutation {
   profile: ProfileMutation!
-  programs: ProgramsMutation!
+  programs: LoyaltyProgramsMutation!
 }
 
 type ProfileMutation {
@@ -102,7 +102,7 @@ type ProfileMutation {
   updateEmailAddress: CustomerProfileUpdateEmailAddressPayload!
 }
 
-type ProgramsMutation {
+type LoyaltyProgramsMutation {
   updateFoodLoyaltyPreferences(
     input: FoodLoyaltyUpdatePreferencesInput!
   ): FoodLoyaltyUpdatePreferencesPayload!
@@ -133,7 +133,7 @@ type Mutation {
 type CustomerMutation @key(fields: "id") {
   id: ID! @shareable
   profile: ProfileMutation! @shareable
-  programs: ProgramsMutation! @shareable
+  programs: LoyaltyProgramsMutation! @shareable
 }
 
 type ProfileMutation @key(fields: "id") {
@@ -146,7 +146,7 @@ type ProfileMutation @key(fields: "id") {
   ): CustomerProfileUpdateNamePayload!
 }
 
-type ProgramsMutation @key(fields: "id") {
+type LoyaltyProgramsMutation @key(fields: "id") {
   id: ID! @shareable
   updateFoodLoyaltyPreferences(
     input: FoodLoyaltyUpdatePreferencesInput!
@@ -169,7 +169,7 @@ type Mutation {
 type CustomerMutation @key(fields: "id") {
   id: ID! @shareable
   profile: ProfileMutation! @shareable
-  programs: ProgramsMutation! @shareable
+  programs: LoyaltyProgramsMutation! @shareable
 }
 
 type ProfileMutation @key(fields: "id") {
@@ -177,7 +177,7 @@ type ProfileMutation @key(fields: "id") {
   updateEmailAddress: CustomerProfileUpdateEmailAddressPayload!
 }
 
-type ProgramsMutation @key(fields: "id") {
+type LoyaltyProgramsMutation @key(fields: "id") {
   id: ID! @shareable
   foodLoyalty(
     input: FoodLoyaltyUpdatePreferencesInput!
@@ -252,7 +252,7 @@ flowchart LR
 
 With query namespaces, we are grouping response data returned from disparate subgraphs related to an entity; therefore the namespace IDs must relate to the underlying entity, in this case the customer. However, in our mutations, our namespace types are just logical groupings of mutations themselves -- not of response data related to an underlying entity. In fact, with our mutation namespaces there is only a single instance. _Because of this, the value of the ID of a mutation entity in a federated graph doesn't matter as long as all subgraphs agree on what it is._
 
-In the past, I have used the convention that the value of the `id` field is simply a static string that matches the name of the type. For example, the ID of the `ProgramsMutation` namespace is `"ProgramsMutation"`, the ID of the `ProfileMutation` namespace is `"ProfileMutation"`, and so on. This creates a stable ID that is only an agreed identity token for the logical namespace, not a customer or resource identifier.
+In the past, I have used the convention that the value of the `id` field is simply a static string that matches the name of the type. For example, the ID of the `LoyaltyProgramsMutation` namespace is `"LoyaltyProgramsMutation"`, the ID of the `ProfileMutation` namespace is `"ProfileMutation"`, and so on. This creates a stable ID that is only an agreed identity token for the logical namespace, not a customer or resource identifier.
 
 Clients should not send multiple mutations in one request because GraphQL does not provide transactional guarantees across mutations. In the usual case, a namespaced mutation is resolved by a single subgraph, which returns the complete response; there is no query-style join to perform.
 

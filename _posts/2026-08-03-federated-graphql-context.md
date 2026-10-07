@@ -202,9 +202,9 @@ A few things to notice:
 - **Declarative** — which subgraphs require which identifiers is visible in the schema, making it auditable during governance reviews.
 - **Stateless** — no encrypted headers or session state flowing between services. Given a customer ID, the router resolves the mappings on every request.
 
-> **<i class="fas fa-lightbulb"></i>key insight:**  
-> By keeping identifiers _in the schema_ rather than in headers or session state, we decouple the auth context from the resource context. The same subgraph resolvers work whether a customer is querying their own data or a support agent is looking someone up.
-> {: .notice--info}
+**<i class="fas fa-lightbulb"></i>key insight:**  
+By keeping identifiers _in the schema_ rather than in headers or session state, we decouple the auth context from the resource context. The same subgraph resolvers work whether a customer is querying their own data or a support agent is looking someone up.
+{: .notice--info}
 
 ### Two Entry Points with a Single Entity
 
@@ -422,6 +422,6 @@ Large organizations don't need to choose between unified experiences and domain 
 
 ---
 
-> <i class="fas fa-person-chalkboard"></i>  
-> I was lucky enough to be asked to speak at Apollo Summit 2024 and this pattern was part of the discussion. [Check it out](https://www.apollographql.com/events/a-request-for-comment-federating-standards-and-schema-design-patterns-at-fidelity)
-> {: .notice--info}
+<i class="fas fa-person-chalkboard"></i>  
+I was lucky enough to be asked to speak at Apollo Summit 2024 and this pattern was part of the discussion. [Check it out](https://www.apollographql.com/events/a-request-for-comment-federating-standards-and-schema-design-patterns-at-fidelity)
+{: .notice--info}

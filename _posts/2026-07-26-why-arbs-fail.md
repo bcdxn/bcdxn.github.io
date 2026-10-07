@@ -49,9 +49,9 @@ Most review boards become gatekeepers. In and of itself, this is not necessarily
 
 The issue is when the mindset of the ARB becomes "Can we approve this design?" instead of asking "How can we help this team succeed?". This approach immediately drives a wedge between engineering teams and the ARB. The preparation becomes performative. Design docs become templatized to satisfy the committee and it becomes tedious to explore new paths as an engineering team (or solutions architect). Sensing the tension, the ARB itself also feels as though its hands are tied (depending on its members' appetite for confrontation) — feedback gets swallowed because asking questions feels like pushing back.
 
-> **<i class="fas fa-lightbulb"></i>key insight:**  
-> When reviews feel like hurdles instead of handrails, engineers stop bringing problems early—and that's when risk actually increases.
-> {: .notice--info}
+**<i class="fas fa-lightbulb"></i>key insight:**  
+When reviews feel like hurdles instead of handrails, engineers stop bringing problems early—and that's when risk actually increases.
+{: .notice--info}
 
 ---
 
@@ -124,9 +124,9 @@ First, I wanted clear requirements on what teams needed to bring to a review. Th
    - Container Diagram (static model)
 3. Sequence Diagram (dynamic model) using the actors defined in the C4 container diagram
 
-> **<i class="fas fa-lightbulb"></i>key insight:**  
-> We chose these artifacts because of _where_ they were created in the development lifecycle. With contract first API development, having the OpenAPI Spec document and architecture diagrams could come before any code was written. We wanted the reviews to happen before engineers spent weeks or months writing code and becoming emotionally attached to their solutions.
-> {: .notice--info}
+**<i class="fas fa-lightbulb"></i>key insight:**  
+We chose these artifacts because of _where_ they were created in the development lifecycle. With contract first API development, having the OpenAPI Spec document and architecture diagrams could come before any code was written. We wanted the reviews to happen before engineers spent weeks or months writing code and becoming emotionally attached to their solutions.
+{: .notice--info}
 
 ### Defining Review Criteria (When to Review)
 

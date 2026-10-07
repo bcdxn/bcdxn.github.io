@@ -146,9 +146,9 @@ What jumps out is not how many tasks the MoE model failed to complete — it's h
 - **15% of submissions** were invalid patches — the evaluator couldn't even apply them; the model had hallucinated invalid content for the diff
 - Combined: **the MoE model was confidently wrong 52.5% of the time it produced an answer**
 
-> **<i class="fas fa-triangle-exclamation"></i> Caveat:**  
-> Because the 27B model timed out more frequently under the 5-minute limit, I may not have given it enough rope to hallucinate at the same rate. For a fair apples-to-apples comparison, both models should be allowed to run to completion. This is why i'm not calling out the direct comparison between the accuracy rates of the two models here.
-> {: .notice--warning}
+**<i class="fas fa-triangle-exclamation"></i> Caveat:**  
+Because the 27B model timed out more frequently under the 5-minute limit, I may not have given it enough rope to hallucinate at the same rate. For a fair apples-to-apples comparison, both models should be allowed to run to completion. This is why i'm not calling out the direct comparison between the accuracy rates of the two models here.
+{: .notice--warning}
 
 **_Update 2026-08-08_**
 

@@ -43,8 +43,8 @@ In practice, prefer nullable fields. A field should be non-nullable only when pr
 2. **Partial responses**: Errors on non-nullable fields bubble up to the nearest nullable ancestor, limiting how much data you can return. One of GraphQL's strengths is its ability to return partial success responses elegantly.
 3. **Data inconsistencies**: Older datasets rarely have perfect coverage. For example, it may be desirable for a customer record to have a phone number, but not guaranteed.
 
-> **<i class="fas fa-lightbulb"></i>** In supergraphs, where evolution is critical, prefer nullable fields over non-nullable by default.
-> {: .notice--info}
+**<i class="fas fa-lightbulb"></i>** In supergraphs, where evolution is critical, prefer nullable fields over non-nullable by default.
+{: .notice--info}
 
 **Example**
 

@@ -179,9 +179,9 @@ internal/
     └── cmd_...           Generated Cobra command definitions
 ```
 
-> **<i class="fas fa-lightbulb"></i>key insight:**  
-> the generated code defines an `ActionsInterface`. The interface creates a contract that maps one-to-one with every command in your spec. Your job is simply to implement it. Let's see how this works.
-> {: .notice--info}
+**<i class="fas fa-lightbulb"></i>key insight:**  
+the generated code defines an `ActionsInterface`. The interface creates a contract that maps one-to-one with every command in your spec. Your job is simply to implement it. Let's see how this works.
+{: .notice--info}
 
 Each generated command file exposes a function that returns a Cobra command, receiving the `ActionsInterface` as a dependency:
 
