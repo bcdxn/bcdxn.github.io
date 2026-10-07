@@ -20,7 +20,7 @@ In a large enterprise GraphQL API, there may be thousands of mutations and queri
 
 Namespacing mutations receives more pushback, but I believe it's still a valuable pattern. There are some oddities that I'll discuss later, but overall it presents a more hierarchical graph where the relationships between your entities are represented more clearly. It creates a more readable and discoverable API.
 
-### An Example of a Flat GraphQL API
+**An Example of a Flat GraphQL API**
 
 <pre class="mermaid">
 %%{init: {'themeVariables': { 'edgeLabelBackground': '#fff'}}}%%
@@ -40,7 +40,7 @@ flowchart TD
   class mutation user
 </pre>
 
-### An Example of a Hierarchical, Namespaced GraphQL API
+**An Example of a Hierarchical, Namespaced GraphQL API**
 
 <pre class="mermaid">
 %%{init: {'themeVariables': { 'edgeLabelBackground': '#fff'}}}%%
@@ -53,31 +53,24 @@ flowchart TD
   customer(CustomerMutation)
   profile(ProfileMutation)
   programs(ProgramsMutation)
-  foodLoyalty(FoodLoyaltyMutation)
-  personalCareRewards(PersonalCareRewardsMutation)
-  homeAndCleaning(HomeAndCleaningMutation)
 
   mutation --> customer
   customer --> profile
   customer --> programs
-  programs --> foodLoyalty
-  programs --> personalCareRewards
-  programs --> homeAndCleaning
+  programs --> updateFoodLoyaltyPreferences[updateFoodLoyaltyPreferences]
+  programs --> updatePersonalCareRewardsPreferences[updatePersonalCareRewardsPreferences]
+  programs --> updateHomeAndCleaningPreferences[updateHomeAndCleaningPreferences]
 
   profile --> updatePreferredName[updatePreferredName]
   profile --> updateName[updateName]
   profile --> updateEmailAddress[updateEmailAddress]
-  foodLoyalty --> foodLoyaltyUpdatePreferences[updatePreferences]
-  personalCareRewards --> personalCareUpdatePreferences[updatePreferences]
-  homeAndCleaning --> homeAndCleaningUpdatePreferences[updatePreferences]
-
   class mutation user
-  class customer,profile,programs,foodLoyalty,personalCareRewards,homeAndCleaning grouping
+  class customer,profile,programs grouping
 </pre>
 
-In general, your namespaces should align with your API domain model. A graph could also align with a formal data taxonomy, but in general an API domain model based on domain-driven design creates a clearer, more succinct graph. Exposing the internals of your data taxonomy can lead to overexposing data and underexposing capabilities -- think [anemic domain models](https://martinfowler.com/bliki/AnemicDomainModel.html)
+In general, your namespaces should align with your API domain model. A graph could also align with a formal data taxonomy, but in general an API domain model based on Domain Driven Design creates a clearer, more succinct graph. Exposing the internals of your data taxonomy can lead to overexposing data and underexposing capabilities -- think [anemic domain models](https://martinfowler.com/bliki/AnemicDomainModel.html)
 
-Note that you can go overboard here. You should aim to have less than a few hundred mutations or queries in each namespace, but don't create namespaces with a granularity so fine that it begins to negatively impact readability. Think of namespaces like genres in a bookstore: they help you get to a set of related books quickly, and then you can navigate alphabetically to find the book you're looking for. In our case, namespaces should help you quickly jump to a specific domain. From there, you should rely on standard naming conventions to find the specific capability you're after.
+Note that you can go overboard here. The exact number of namespaces and mutations per namespace will vary by your domain but in general the goal is improving readability and discoverability. I'd say you should aim to have no more than a couple hundred mutations or queries in each namespace to achieve that goal. Don't create namespaces so coarse that you still struggle to find the needle in the haystack and avoid a namespace granularity so fine that it begins to negatively impact readability and the size of your graph -- that is no good either. Think of namespaces like genres in a bookstore: they help you get to a set of related books quickly, and then you can navigate alphabetically to find the book you're looking for. In our case, namespaces should help you quickly jump to a specific domain. From there, you should rely on standard naming conventions to find the specific capability you're after.
 
 So what does this look like in practice?
 
@@ -108,25 +101,13 @@ type ProfileMutation {
 }
 
 type ProgramsMutation {
-  foodLoyalty: FoodLoyaltyMutation!
-  personalCareRewards: PersonalCareRewardsMutation!
-  homeAndCleaning: HomeAndCleaningMutation!
-}
-
-type FoodLoyaltyMutation {
-  updatePreferences(
+  updateFoodLoyaltyPreferences(
     input: FoodLoyaltyUpdatePreferencesInput!
   ): FoodLoyaltyUpdatePreferencesPayload!
-}
-
-type PersonalCareRewardsMutation {
-  updatePreferences(
+  updatePersonalCareRewardsPreferences(
     input: PersonalCareRewardsUpdatePreferencesInput!
   ): PersonalCareRewardsUpdatePreferencesPayload!
-}
-
-type HomeAndCleaningMutation {
-  updatePreferences(
+  updateHomeAndCleaningPreferences(
     input: HomeAndCleaningUpdatePreferencesInput!
   ): HomeAndCleaningUpdatePreferencesPayload!
 }
@@ -139,7 +120,7 @@ type HomeAndCleaningMutation {
 
 Namespacing mutations in a federated graph is similar to namespacing them in a stand-alone graph; we'll still use types to logically organize our mutations. However, in a federated graph, we will likely want multiple subgraphs to contribute to a single mutation namespace. To do this, we must turn the namespace into an entity by adding the `@key` directive. Different subgraphs will contribute fields to the _same_ namespace, so those fields must be shareable using the `@shareable` directive.
 
-### For Example
+**For Example**
 
 ```graphql
 # Subgraph A
@@ -165,6 +146,15 @@ type ProfileMutation @key(fields: "id") {
 
 type ProgramsMutation @key(fields: "id") {
   id: ID! @shareable
+  updateFoodLoyaltyPreferences(
+    input: FoodLoyaltyUpdatePreferencesInput!
+  ): FoodLoyaltyUpdatePreferencesPayload!
+  updatePersonalCareRewardsPreferences(
+    input: PersonalCareRewardsUpdatePreferencesInput!
+  ): PersonalCareRewardsUpdatePreferencesPayload!
+  updateHomeAndCleaningPreferences(
+    input: HomeAndCleaningUpdatePreferencesInput!
+  ): HomeAndCleaningUpdatePreferencesPayload!
 }
 ```
 
@@ -187,14 +177,15 @@ type ProfileMutation @key(fields: "id") {
 
 type ProgramsMutation @key(fields: "id") {
   id: ID! @shareable
-  foodLoyalty: FoodLoyaltyMutation!
-}
-
-type FoodLoyaltyMutation @key(fields: "id") {
-  id: ID!
-  updatePreferences(
+  foodLoyalty(
     input: FoodLoyaltyUpdatePreferencesInput!
   ): FoodLoyaltyUpdatePreferencesPayload!
+  updatePersonalCareRewardsPreferences(
+    input: PersonalCareRewardsUpdatePreferencesInput!
+  ): PersonalCareRewardsUpdatePreferencesPayload!
+  updateHomeAndCleaningPreferences(
+    input: HomeAndCleaningUpdatePreferencesInput!
+  ): HomeAndCleaningUpdatePreferencesPayload!
 }
 ```
 
@@ -257,11 +248,15 @@ flowchart LR
 **<i class="fas fa-triangle-exclamation"></i>** Note that I am using a query to illustrate the merging behavior above. It is typically frowned upon to run multiple mutations in a single request as there are no transactional guarantees in a GraphQL API.
 {: .notice--warning}
 
-Remember that our namespace types are just logical groupings of mutations -- they aren't themselves true entities like a customer or an account. In fact, there is only a single instance of a mutation/query namespace entity. _Because of this, the ID doesn't matter as long as all subgraphs agree on what it is._
+With query namespaces, we are grouping response data returned from disparate subgraphs related to an entity; therefore the namespace IDs must relate to the underlying entity, in this case the customer. However, in our mutations, our namespace types are just logical groupings of mutations themselves -- not of response data related to an underlying entity. In fact, with our mutation namespaces there is only a single instance. _Because of this, the value of the ID of a mutation entity in a federated graph doesn't matter as long as all subgraphs agree on what it is._
 
-In the past, I have used the convention that the value of the `id` field is simply a static string that matches the name of the type. For example, the ID of the `ProgramsMutation` namespace is `"ProgramsMutation"`, the ID of the `ProfileMutation` namespace is `"ProfileMutation"`, and so on.
+In the past, I have used the convention that the value of the `id` field is simply a static string that matches the name of the type. For example, the ID of the `ProgramsMutation` namespace is `"ProgramsMutation"`, the ID of the `ProfileMutation` namespace is `"ProfileMutation"`, and so on. This creates a stable ID that is only an agreed identity token for the logical namespace, not a customer or resource identifier.
 
-With mutations, we shouldn't need to merge responses of multiple mutations because clients shouldn't be running multiple mutations in a single request (this is probably something you should enforce in your client-side code reviews via linting and/or code scanning), and because we're using shareable entities, i.e. each subgraph has a top-level entrypoint into the mutation, we shouldn't need to merge hierachically namespaced entities either. We still need to include the `@key` field and ID as it is required per the Federated GraphQL specification allowing multiple subgraphs to extend the same the entity.
+Clients should not send multiple mutations in one request because GraphQL does not provide transactional guarantees across mutations. In the usual case, a namespaced mutation is resolved by a single subgraph, which returns the complete response; there is no query-style join to perform.
+
+The namespace still needs an `@key` field and a stable ID. Federation requires that identity so multiple subgraphs can contribute to the same namespace type, even when the router does not need to merge multiple mutation responses at query execution time.
+
+**For Example, consider the mutation**
 
 ```graphql
 mutation UpdatePreferredName($input: CustomerProfileUpdatePreferredNameInput!) {
@@ -275,6 +270,8 @@ mutation UpdatePreferredName($input: CustomerProfileUpdatePreferredNameInput!) {
 }
 ```
 
+The mutation is handled by a single subgraph and router returns the response to the caller. No merge is necessary.
+
 <pre class="mermaid">
 %%{init: {'themeVariables': { 'edgeLabelBackground': '#fff'}}}%%
 flowchart LR
@@ -285,8 +282,8 @@ flowchart LR
 
   router((Apollo Router))
   profile[Customer Profile Subgraph]
-  profileResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {...}<br/>}"]
-  merged["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {...}<br/>}"]
+  profileResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {<br/>&nbsp;&nbsp;&nbsp;&nbsp;id: ProfileMutation<br/>&nbsp;&nbsp;&nbsp;&nbsp;updatePreferredName {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/>}"]
+  merged["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {<br/>&nbsp;&nbsp;&nbsp;&nbsp;id: ProfileMutation<br/>&nbsp;&nbsp;&nbsp;&nbsp;updatePreferredName {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/>}"]
 
   profile --> profileResponse --> router
   router --> merged
@@ -301,6 +298,6 @@ flowchart LR
 
 ## Closing Thoughts
 
-A mutation namespace is more than a container for fields. It is a map for navigating a large graph. Hierarchical graphs communicate that certain queries and mutations belong to different parts of the customer domain before a consumer ever reads a resolver or opens a documentation page.
+A mutation namespace is more than a container for fields. It is a map for navigating a large graph. Hierarchical graphs communicate that certain queries and mutations belong to different parts of your business domain before a consumer ever reads a resolver or opens a documentation page.
 
-That structure becomes especially valuable as a graph grows and more teams contribute to it. A well-designed namespace gives people and agents a reliable place to look, while Federation lets multiple subgraphs extend that place without forcing the graph back into a flat list. The goal is not maximum nesting. The goal is a graph whose shape explains the domain, makes capabilities discoverable, and stays readable as the organization behind it changes.
+That structure becomes especially valuable as a graph grows and more teams contribute to it. A well-designed namespace gives people and agents a reliable place to look, while Federation lets multiple subgraphs extend that place without forcing the graph back into a flat list. The goal is to build a graph whose shape explains the domain, makes capabilities discoverable, and stays readable as the organization behind it changes.
