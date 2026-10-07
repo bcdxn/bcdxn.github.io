@@ -3,18 +3,20 @@ title: "Namespacing Mutations in a Federated Graph"
 date: 2026-10-07 07:30:00 -0400
 categories: [blog]
 tags: [graphql, federation, apollo, architecture]
-excerpt: ""
+excerpt: "How hierarchical mutation namespaces improve discoverability and organization in large federated GraphQL APIs."
 image:
-  path: /assets/images/banners/2026-09-14.jpg
+  path: /assets/images/banners/2026-10-07.jpg
   alt: header
 header:
-  og_image: /assets/images/banners/2026-09-14.jpg
+  og_image: /assets/images/banners/2026-10-07.jpg
 ---
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 <script type="module">
   mermaid.initialize({ startOnLoad: true });
 </script>
+
+[![banner](/assets/images/banners/2026-10-07.jpg)](https://unsplash.com/photos/palm-leaf-against-blue-sky-TMxUnMAAwFA)
 
 In a large enterprise GraphQL API, there may be thousands of mutations and queries. Namespacing queries is one approach to adding structure to your graph; it prevents a flat graph with thousands of root-level queries and improves the logical organization. This makes relationships clear and helps developers (and agents) find the functionality they're looking for in large, complex GraphQL APIs. For more details on why namespacing in GraphQL is a good idea, see Apollo's technical note on [Namespacing by Separation of Concern](https://www.apollographql.com/docs/graphos/schema-design/guides/namespacing-by-separation-of-concerns).
 
