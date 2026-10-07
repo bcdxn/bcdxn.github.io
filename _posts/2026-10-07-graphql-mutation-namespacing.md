@@ -200,6 +200,28 @@ type FoodLoyaltyMutation @key(fields: "id") {
 
 So now we know what the schema looks like, but what does a subgraph actually provide as the value of a mutation namespace's `id` field? Before we can answer that, it's important to understand the purpose of the `id` field. Apollo Router uses it to merge data in responses from multiple subgraphs that are related to the same entity. This is easier to understand with a _query_ example: a customer's loyalty information, personal care information, and profile data come from separate subgraphs, and the router returns a single customer object.
 
+**For example, consider the query**
+
+```graphql
+query customerView {
+  customer {
+    profile {
+      # ...
+    }
+    programs {
+      foodLoyaltyProgram {
+        # ...
+      }
+      personalCareRewards {
+        # ...
+      }
+    }
+  }
+}
+```
+
+Each subgraph returns its piece(s) of the namespace(s) and the final response is merged and returned to the caller as shown below.
+
 <pre class="mermaid">
 %%{init: {'themeVariables': { 'edgeLabelBackground': '#fff'}}}%%
 flowchart LR
@@ -212,16 +234,16 @@ flowchart LR
   personal[Personal Care Subgraph]
   profile[Customer Profile Subgraph]
 
-  foodResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;foodLoyaltyProgram: {...}<br/>}"]
-  personalResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;personalCareRewards: {...}<br/>}"]
   profileResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {...}<br/>}"]
+  foodResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;programs:{<br/>&nbsp;&nbsp;&nbsp;&nbsp;id:123456<br/>&nbsp;&nbsp;&nbsp;&nbsp;foodLoyalty: {...}<br/>&nbsp;&nbsp;}<br/>}"]
+  personalResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;programs:{<br/>&nbsp;&nbsp;&nbsp;&nbsp;id:123456<br/>&nbsp;&nbsp;&nbsp;&nbsp;personalCareRewards: {...}<br/>&nbsp;&nbsp;}<br/>}"]
 
   router((Apollo Router))
-  merged["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;foodLoyaltyProgram: {...}<br/>&nbsp;&nbsp;personalCareRewards: {...}<br/>&nbsp;&nbsp;profile: {...}<br/>}"]
+  merged["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {...}<br/>&nbsp;&nbsp;programs:{<br/>&nbsp;&nbsp;&nbsp;&nbsp;id:123456<br/>&nbsp;&nbsp;&nbsp;&nbsp;foodLoyalty: {...}<br/>&nbsp;&nbsp;&nbsp;&nbsp;personalCareRewards: {...}<br/>&nbsp;&nbsp;}<br/>}"]
 
+  profile --> profileResponse --> router
   food --> foodResponse --> router
   personal --> personalResponse --> router
-  profile --> profileResponse --> router
   router --> merged
 
   class food,personal,profile,foodResponse,personalResponse,profileResponse,merged grouping
@@ -239,7 +261,7 @@ Remember that our namespace types are just logical groupings of mutations -- the
 
 In the past, I have used the convention that the value of the `id` field is simply a static string that matches the name of the type. For example, the ID of the `ProgramsMutation` namespace is `"ProgramsMutation"`, the ID of the `ProfileMutation` namespace is `"ProfileMutation"`, and so on.
 
-With mutations, we shouldn't need to merge responses of multiple mutations because clients shouldn't be running multiple mutations in a single request (this is probably something you should enforce in your client-side code reviews via linting and/or code scanning), and because we're using shareable entities, i.e. each subgraph has a top-level entrypoint to the mutation, we shouldn't need to merge hierachically namespaced entities either. We still need to include the @key field and ID as it is required per the Federated GraphQL specification allowing multiple subgraphs to extend the same the entity.
+With mutations, we shouldn't need to merge responses of multiple mutations because clients shouldn't be running multiple mutations in a single request (this is probably something you should enforce in your client-side code reviews via linting and/or code scanning), and because we're using shareable entities, i.e. each subgraph has a top-level entrypoint into the mutation, we shouldn't need to merge hierachically namespaced entities either. We still need to include the `@key` field and ID as it is required per the Federated GraphQL specification allowing multiple subgraphs to extend the same the entity.
 
 ```graphql
 mutation UpdatePreferredName($input: CustomerProfileUpdatePreferredNameInput!) {
