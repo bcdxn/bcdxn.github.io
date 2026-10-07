@@ -26,18 +26,18 @@ Namespacing mutations receives more pushback, but I believe it's still a valuabl
 
 <pre class="mermaid">
 %%{init: {'themeVariables': { 'edgeLabelBackground': '#fff'}}}%%
-flowchart TD
+flowchart LR
   classDef default fill:none,stroke-width:2px
   classDef grouping fill:none,stroke:#999,stroke-width:2px
   classDef user fill:none,stroke:#333,stroke-width:3px
 
   mutation([mutation])
-  mutation --> updatePreferredName[updatePreferredName]
-  mutation --> updateName[updateName]
   mutation --> updateEmailAddress[updateEmailAddress]
   mutation --> updateFoodLoyaltyPreferences[updateFoodLoyaltyPreferences]
-  mutation --> updatePersonalCarePreferences[updatePersonalCarePreferences]
   mutation --> updateHomeAndCleaningPreferences[updateHomeAndCleaningPreferences]
+  mutation --> updateName[updateName]
+  mutation --> updatePersonalCarePreferences[updatePersonalCarePreferences]
+  mutation --> updatePreferredName[updatePreferredName]
 
   class mutation user
 </pre>
@@ -46,7 +46,7 @@ flowchart TD
 
 <pre class="mermaid">
 %%{init: {'themeVariables': { 'edgeLabelBackground': '#fff'}}}%%
-flowchart TD
+flowchart LR
   classDef default fill:none,stroke-width:2px
   classDef grouping fill:none,stroke:#999,stroke-width:2px
   classDef user fill:none,stroke:#333,stroke-width:3px
@@ -60,12 +60,12 @@ flowchart TD
   customer --> profile
   customer --> programs
   programs --> updateFoodLoyaltyPreferences[updateFoodLoyaltyPreferences]
-  programs --> updatePersonalCareRewardsPreferences[updatePersonalCareRewardsPreferences]
   programs --> updateHomeAndCleaningPreferences[updateHomeAndCleaningPreferences]
+  programs --> updatePersonalCareRewardsPreferences[updatePersonalCareRewardsPreferences]
 
-  profile --> updatePreferredName[updatePreferredName]
-  profile --> updateName[updateName]
   profile --> updateEmailAddress[updateEmailAddress]
+  profile --> updateName[updateName]
+  profile --> updatePreferredName[updatePreferredName]
   class mutation user
   class customer,profile,programs grouping
 </pre>
