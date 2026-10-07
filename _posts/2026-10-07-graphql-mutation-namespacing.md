@@ -132,8 +132,8 @@ type HomeAndCleaningMutation {
 }
 ```
 
-> **<i class="fas fa-circle-info"></i>** Note that I am using the payload response format described by [Marc Andre](https://magiroux.com) in [Production Ready GraphQL](https://productionreadygraphql.com/2020-08-01-guide-to-graphql-errors), but I have left the actual object definitions out of the examples for brevity.
-> {: .notice--info}
+**<i class="fas fa-circle-info"></i>** Note that I am using the payload response format described by [Marc Andre](https://magiroux.com) in [Production Ready GraphQL](https://productionreadygraphql.com/2020-08-01-guide-to-graphql-errors), but I have left the actual object definitions out of the examples for brevity.
+{: .notice--info}
 
 ## Namespacing Mutations in Federated Subgraphs
 
@@ -198,39 +198,84 @@ type FoodLoyaltyMutation @key(fields: "id") {
 }
 ```
 
-So now we know what the schema looks like, but what does a subgraph actually provide as the value of a mutation namespace's `id` field? Before we can answer that, it's important to understand the purpose of the `id` field. Apollo Router uses it to merge data in responses from multiple subgraphs that are related to the same entity. This is easier to understand with a query example: a customer's loyalty information comes from one subgraph, while personal care information for the same customer comes from another subgraph, and the router returns a single customer object.
+So now we know what the schema looks like, but what does a subgraph actually provide as the value of a mutation namespace's `id` field? Before we can answer that, it's important to understand the purpose of the `id` field. Apollo Router uses it to merge data in responses from multiple subgraphs that are related to the same entity. This is easier to understand with a _query_ example: a customer's loyalty information, personal care information, and profile data come from separate subgraphs, and the router returns a single customer object.
 
-```json
-{
-  "customer": {
-    "id": "123456",
-    "foodLoyaltyProgram": { ... }
-  }
-}
-```
+<pre class="mermaid">
+%%{init: {'themeVariables': { 'edgeLabelBackground': '#fff'}}}%%
+flowchart LR
+  classDef default fill:none,stroke-width:2px
+  classDef grouping fill:none,stroke:#999,stroke-width:2px
+  classDef user fill:none,stroke:#333,stroke-width:3px
+  classDef response font-family:monospace,text-align:left
 
-```json
-{
-  "customer": {
-    "id": "123456",
-    "personalCareRewards": { ... }
-  }
-}
-```
+  food[Food Loyalty Subgraph]
+  personal[Personal Care Subgraph]
+  profile[Customer Profile Subgraph]
 
-```json
-{
-  "customer": {
-    "id": "123456",
-    "foodLoyaltyProgram": { ... },
-    "personalCareRewards": { ... }
-  }
-}
-```
+  foodResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;foodLoyaltyProgram: {...}<br/>}"]
+  personalResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;personalCareRewards: {...}<br/>}"]
+  profileResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {...}<br/>}"]
 
-Remember that our namespace types are just logical groupings of mutations -- they aren't themselves true entities like a customer or an account. In fact, there is only a single instance of a mutation namespace entity. _Because of this, the ID doesn't matter as long as all subgraphs agree on what it is._
+  router((Apollo Router))
+  merged["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;foodLoyaltyProgram: {...}<br/>&nbsp;&nbsp;personalCareRewards: {...}<br/>&nbsp;&nbsp;profile: {...}<br/>}"]
+
+  food --> foodResponse --> router
+  personal --> personalResponse --> router
+  profile --> profileResponse --> router
+  router --> merged
+
+  class food,personal,profile,foodResponse,personalResponse,profileResponse,merged grouping
+  class router user
+  class foodResponse response
+  class personalResponse response
+  class profileResponse response
+  class merged response
+</pre>
+
+**<i class="fas fa-triangle-exclamation"></i>** Note that I am using a query to illustrate the merging behavior above. It is typically frowned upon to run multiple mutations in a single request as there are no transactional guarantees in a GraphQL API.
+{: .notice--warning}
+
+Remember that our namespace types are just logical groupings of mutations -- they aren't themselves true entities like a customer or an account. In fact, there is only a single instance of a mutation/query namespace entity. _Because of this, the ID doesn't matter as long as all subgraphs agree on what it is._
 
 In the past, I have used the convention that the value of the `id` field is simply a static string that matches the name of the type. For example, the ID of the `ProgramsMutation` namespace is `"ProgramsMutation"`, the ID of the `ProfileMutation` namespace is `"ProfileMutation"`, and so on.
+
+With mutations, we shouldn't need to merge responses of multiple mutations because clients shouldn't be running multiple mutations in a single request (this is probably something you should enforce in your client-side code reviews via linting and/or code scanning), and because we're using shareable entities, i.e. each subgraph has a top-level entrypoint to the mutation, we shouldn't need to merge hierachically namespaced entities either. We still need to include the @key field and ID as it is required per the Federated GraphQL specification allowing multiple subgraphs to extend the same the entity.
+
+```graphql
+mutation UpdatePreferredName($input: CustomerProfileUpdatePreferredNameInput!) {
+  customer {
+    profile {
+      updatePreferredName(input: $input) {
+        # ...
+      }
+    }
+  }
+}
+```
+
+<pre class="mermaid">
+%%{init: {'themeVariables': { 'edgeLabelBackground': '#fff'}}}%%
+flowchart LR
+  classDef default fill:none,stroke-width:2px
+  classDef grouping fill:none,stroke:#999,stroke-width:2px
+  classDef user fill:none,stroke:#333,stroke-width:3px
+  classDef response font-family:monospace,text-align:left
+
+  router((Apollo Router))
+  profile[Customer Profile Subgraph]
+  profileResponse["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {...}<br/>}"]
+  merged["customer:{<br/>&nbsp;&nbsp;id: 123456<br/>&nbsp;&nbsp;profile: {...}<br/>}"]
+
+  profile --> profileResponse --> router
+  router --> merged
+
+  class food,personal,profile,foodResponse,personalResponse,profileResponse,merged grouping
+  class router user
+  class foodResponse response
+  class personalResponse response
+  class profileResponse response
+  class merged response
+</pre>
 
 ## Closing Thoughts
 
