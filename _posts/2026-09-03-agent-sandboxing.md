@@ -158,6 +158,8 @@ http_access deny all
 Then I can use Docker Compose to tie the agent container to the Squid container that enforces the ACLs:
 
 ```yaml
+version: "3.8"
+
 networks:
   agent_sandbox:
     internal: true
@@ -267,6 +269,8 @@ http_access deny all
 The `docker-compose.yaml` file is mostly the same, except that I swap the custom Pi image for Microsoft's image and add some in-memory filesystem locations that VS Code expects to write to during normal operation:
 
 ```yaml
+version: "3.8"
+
 networks:
   # Internal network with NO direct internet gateway for agent
   agent_sandbox:
