@@ -3,7 +3,7 @@ title: "I Benchmarked Qwen's Fast MoE Model Locally. It Was Confidently Wrong Ha
 date: 2026-08-07 07:30:00 -0400
 last_modified_at: 2026-08-08 8:00:00 -0400
 categories: [blog]
-tags: [ai, experiments, llm]
+tags: [ai, experiments, llm, localllm]
 excerpt: "The MoE variant is 3.5x faster than its dense sibling — but on my local SWE-bench run it submitted wrong or invalid answers over 52% of the time it 'completed' a task. Here's what I found."
 image:
   path: /assets/images/banners/2026-08-07.jpg
@@ -88,7 +88,7 @@ Here, faster is relative. I didn't want to wait 24 hours for a result so I took 
 ```yaml
 # mini.yaml - configuration overrides allowing me to hit my local LLM
 model:
-  model_name: "openai/qwen3.6-2b"
+  model_name: "openai/qwen3.6-27b"
   cost_tracking: "ignore_errors"
   model_kwargs:
     api_base: "http://192.168.1.173:8080/v1"
@@ -101,13 +101,14 @@ agent:
 
 ```sh
 # Example of running through the tasks
+# (I ran the tests in increments of 10 so I could check the progress)
 mini-extra swebench \
   --config /path/to/default/swebench.yaml \
   --config mini.yaml \
   --output bench-27b \
   --subset lite \
   --split test \
-  --slice ":10" \ # I ran the tests in increments of 10 tests so I could check the progress
+  --slice ":10" \
   --workers 1
 ```
 
@@ -147,12 +148,12 @@ What jumps out is not how many tasks the MoE model failed to complete — it's h
 - Combined: **the MoE model was confidently wrong 52.5% of the time it produced an answer**
 
 **<i class="fas fa-triangle-exclamation"></i> Caveat:**  
-Because the 27B model timed out more frequently under the 5-minute limit, I may not have given it enough rope to hallucinate at the same rate. For a fair apples-to-apples comparison, both models should be allowed to run to completion. This is why i'm not calling out the direct comparison between the accuracy rates of the two models here.
+Because the 27B model timed out more frequently under the 5-minute limit, I may not have given it enough rope to hallucinate at the same rate. For a fair apples-to-apples comparison, both models should be allowed to run to completion. This is why I'm not calling out the direct comparison between the accuracy rates of the two models here.
 {: .notice--warning}
 
 **_Update 2026-08-08_**
 
-Because of the caveat above, I wanted to see if I could create a more fair comparison for the MoE variant. I gave both models 15 minutes per task on all tasks that had previously timed out and ended up with a different picture. I've included the results below and updated my _Takeways_ to reflect the behavior shown.
+Because of the caveat above, I wanted to see if I could create a more fair comparison for the MoE variant. I gave both models 15 minutes per task on all tasks that had previously timed out and ended up with a different picture. I've included the results below and updated my _Takeaways_ to reflect the behavior shown.
 
 ![SWE bench comparison 2](/assets/images/localllm/swe-bench-chart-2.svg)
 
@@ -161,7 +162,7 @@ Because of the caveat above, I wanted to see if I could create a more fair compa
 >
 > Qwen 3.6 27B:
 >
-> - 1 Timeouts
+> - 1 Timeout
 >
 > Qwen 3.6 35B-A3B
 >
@@ -170,7 +171,7 @@ Because of the caveat above, I wanted to see if I could create a more fair compa
 >
 > {: .notice--warning}
 
-With my hardware, and variants of the two models 27B was significantly more accurate. I found a 33% improvement in task completion bringing over all completion rate to an impresive 72% which isn't far off of the official results. Unfortunately I found that _both_ models were quite happy to submit wrong answers. Given more time, the dense model went from 6 wrong answers to submitting 13.
+With my hardware, and variants of the two models 27B was significantly more accurate. I found a 33% improvement in task completion bringing overall completion rate to an impressive 72% which isn't far off of the official results. Unfortunately I found that _both_ models were quite happy to submit wrong answers. Given more time, the dense model went from 6 wrong answers to submitting 13.
 
 Giving the dense model 3x the time to complete the task drove significant results. Giving the MoE task more time to complete the results did not improve its score at all.
 
@@ -182,4 +183,4 @@ None of this is meant to discourage you from using Qwen 3.6 — I use the dense 
 
 **On benchmarks:** Published numbers are a starting point, not a verdict. Quantization, agent harness, time limits, and task distribution all affect results significantly. Particularly, for local LLMs, run your own experiments on your own hardware before making architectural decisions, but bring your patience.
 
-**On confidence:** This is the one that I hadn't really considered when labs post their scores. A model that submits a plausible-looking but broken patch has _failed invisibly_. I found that ~~the MoE variant did this frequently~~ _both the dense model and the MoE variant did this frequently when given enough time_. That's the real risk of leaning on these local models for autonomous work. Right now they are still just tools that require human oversight, albeit extremly powerful, almost magical tools.
+**On confidence:** This is the one that I hadn't really considered when labs post their scores. A model that submits a plausible-looking but broken patch has _failed invisibly_. I found that ~~the MoE variant did this frequently~~ _both the dense model and the MoE variant did this frequently when given enough time_. That's the real risk of leaning on these local models for autonomous work. Right now they are still just tools that require human oversight, albeit extremely powerful, almost magical tools.

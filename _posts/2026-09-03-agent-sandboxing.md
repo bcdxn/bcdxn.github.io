@@ -70,7 +70,7 @@ curl -I https://google.com
 # ...
 ```
 
-Yep, it can phone home. That's exactly what I want to control. So, I can full network isolation via the `--network` flag:
+Yep, it can phone home. That's exactly what I want to control. So, I can enable full network isolation via the `--network` flag:
 
 ```sh
 docker run --rm -ti \
@@ -90,10 +90,10 @@ curl -I https://google.com
 Good. Now I can run it for real with a few more hardening options:
 
 - `--network none`: no interfaces at all. No outbound HTTP, no package installs, no exfiltration.
-- `--read-only`: root filesystem is read-only. Can't drop binaries or with existing packages (e.g. globally installed node_modules).
+- `--read-only`: root filesystem is read-only. Can't drop binaries or tamper with existing packages (e.g. globally installed node_modules).
 - `--tmpfs /tmp:exec`: RAM-backed scratch space that disappears when the container stops. `:exec` lets tools write temp scripts.
 - `--tmpfs /home/agentuser/.pi`: fresh in-memory state per run, no cross-run leakage.
-- `-v "$(pwd):workspace:rw"`: the one intentional write path back to my machine.
+- `-v "$(pwd):/workspace:rw"`: the one intentional write path back to my machine.
 
 ```sh
 docker run --rm -ti \
@@ -158,8 +158,6 @@ http_access deny all
 Then I can use Docker Compose to tie the agent container to the Squid container that enforces the ACLs:
 
 ```yaml
-version: "3.8"
-
 networks:
   agent_sandbox:
     internal: true
@@ -269,8 +267,6 @@ http_access deny all
 The `docker-compose.yaml` file is mostly the same, except that I swap the custom Pi image for Microsoft's image and add some in-memory filesystem locations that VS Code expects to write to during normal operation:
 
 ```yaml
-version: "3.8"
-
 networks:
   # Internal network with NO direct internet gateway for agent
   agent_sandbox:

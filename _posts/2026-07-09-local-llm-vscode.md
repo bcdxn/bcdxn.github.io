@@ -16,7 +16,7 @@ header:
 
 This is a "learn-as-I-go" post. I want to integrate VSCode with a local LLM. There are a few motivating reasons:
 
-1. There is a fair amount hype around open source models and smaller models in particular right now and I'm curious to see how difficult it is to set one up myself.
+1. There is a fair amount of hype around open source models and smaller models in particular right now and I'm curious to see how difficult it is to set one up myself.
 2. I want to see how a local LLM can compare to a hosted model like Claude Sonnet 4.6 (the model I tend to reach for at the moment for every-day coding tasks)
 3. Copilot burns through credits with the new billing model, even when I select the cheaper models so I want to see if local LLMs can be a viable alternative to hosted models for certain tasks.
 4. I want to run some benchmarks for different scenarios around [OpenCLI Specification](https://opencli.dev) documents and I'm hoping that by running my own model I'll have greater control over the tests.
@@ -25,7 +25,7 @@ This is a "learn-as-I-go" post. I want to integrate VSCode with a local LLM. The
 
 First it looks like we have to install what amounts to a 'package manager' for models. There are several choices, but the big two appear to be [Ollama](https://ollama.com) and [LM Studio](https://lmstudio.ai). I'm choosing Ollama simply because it seems more lightweight (just a background daemon with CLI support) and it seems to have great community engagement. Then I'll have to pick a model (more on that later)
 
-Although my daily coding machine is a Macbook Pro M4, I'm aiming to run the models on my gaming PC because it has a has an Nvidia 5090 GPU. That means I'm going to be running some powershell (which I've never really used; so bare with me if you see some scripts below that are... suboptimal). So I'll have to expose ollama as a service on my local network so I can continue to work on my Mac while offloading the model inference to my PC.
+Although my daily coding machine is a Macbook Pro M4, I'm aiming to run the models on my gaming PC because it has an Nvidia 5090 GPU. That means I'm going to be running some powershell (which I've never really used; so bear with me if you see some scripts below that are... suboptimal). So I'll have to expose ollama as a service on my local network so I can continue to work on my Mac while offloading the model inference to my PC.
 
 ### Install Ollama
 
@@ -37,7 +37,7 @@ irm https://ollama.com/install.ps1 | iex
 
 ### Picking a Model
 
-I'll do what anyone would do and go to reddit to see what models are recommended for coding. Specifically, I come across [this post](https://www.reddit.com/r/LocalLLM/comments/1rjle3c/best_coding_local_llm_that_can_fit_on_5090/) that points me to the Qwen family of models. Qwen seemed to be unamimously endorsed with some debate over specifics (version, model weights, quantization, KV cache optimizations, etc.) I know what these words mean by themselves, but in this context it's still a mystery.
+I'll do what anyone would do and go to reddit to see what models are recommended for coding. Specifically, I come across [this post](https://www.reddit.com/r/LocalLLM/comments/1rjle3c/best_coding_local_llm_that_can_fit_on_5090/) that points me to the Qwen family of models. Qwen seemed to be unanimously endorsed with some debate over specifics (version, model weights, quantization, KV cache optimizations, etc.) I know what these words mean by themselves, but in this context it's still a mystery.
 
 Before selecting a model, I want to know what these various parameters actually mean. Let's ask Gemini to explain them.
 
@@ -47,7 +47,7 @@ Before selecting a model, I want to know what these various parameters actually 
 >
 > During training, the model adjusts these numbers billions of times until it gets really good at predicting the token (i.e. word).
 
-So when a model name contains something like '32B' it means it **32 Billion parameters**. Generally, more parameters means a smarter, more capable model, but it also requires more VRAM. And with a 5090 I'm capped at 32GB.
+So when a model name contains something like '32B' it means it has **32 Billion parameters**. Generally, more parameters means a smarter, more capable model, but it also requires more VRAM. And with a 5090 I'm capped at 32GB.
 
 #### Quantization Level
 
@@ -106,7 +106,7 @@ Pretty cool! But that's not exactly what I want. I want to expose the model as a
 
 ### Exposing Ollama on my Local Network
 
-I quit ollama by type `ctrl + d` in powershell.
+I quit ollama by typing `ctrl + d` in powershell.
 
 To expose ollama on my local network I have to set an environment variable. There's lots of ways to do this in Windows, but I'll use a script block `& { ... }` and simply chain the `$env:...` command with `ollama...`.
 
@@ -159,7 +159,7 @@ And now I can prompt my own local LLM!
 
 ![Prompt Local LLM](/assets/images/localllm/inference.png)
 
-Honestly, that was easier that I thought it would be. The state of the tooling and ecosystem is impressively polished. From start to finish I was up and running in about a half hour. And that's including my detour to understand terms and download 60GB+ of models.
+Honestly, that was easier than I thought it would be. The state of the tooling and ecosystem is impressively polished. From start to finish I was up and running in about a half hour. And that's including my detour to understand terms and download 60GB+ of models.
 
 Next up... running some benchmarks to see how performance compares to the hosted models and to other configurations of open source models. Then I want to run some benchmarks to see how we can improve token usage efficiency when using [OpenCLI Specification](https://opencli.dev) documents to build context about CLI tooling.
 
@@ -173,4 +173,4 @@ After updating visual studio code on my Mac, my model integration over the LAN s
 
 I wasted another 30 minutes trying to figure out what had changed (I even rolled back to an older version of vs code and got the same results). The issue was that MacOS had toggled the `System Settings` / `Privacy & Security` / `Local Network` setting for the new install of VS Code and was preventing the app from making requests on the local network.
 
-TL;DR: For visual studio code, make sure the "Allow the applications below to find and communicate with devices on your local network." toggled is enabled.
+TL;DR: For visual studio code, make sure the "Allow the applications below to find and communicate with devices on your local network." toggle is enabled.

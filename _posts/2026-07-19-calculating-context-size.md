@@ -2,7 +2,7 @@
 title: "How I Calculated the Optimal Context Size for My Local LLM"
 date: 2026-07-19 07:30:00 -0400
 categories: [blog]
-tags: [ai, llm, ollama, qwen, local-llm]
+tags: [ai, llm, ollama, qwen, localllm]
 excerpt: "A practical walkthrough of calculating context window sizing for a local Qwen model on an RTX 5090"
 image:
   path: /assets/images/banners/2026-07-19.jpg
